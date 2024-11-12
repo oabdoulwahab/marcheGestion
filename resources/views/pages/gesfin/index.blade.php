@@ -51,7 +51,7 @@
             </div> --}}
         </div>
         <!-- Fenêtre modale pour ajouter un membre -->
-        {{-- <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel"
+         <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        </div> --}}
+        </div>
 
 
         <div class="container my-5">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Personnel;
 use Illuminate\Http\Request;
 
 class PersonnelController extends Controller
@@ -12,7 +13,8 @@ class PersonnelController extends Controller
     public function index()
     {
         //
-        return View('pages.personnel.index');
+        $personnels = Personnel::all();
+        return View('pages.personnel.index',compact('personnels'));
     }
 
     /**
@@ -29,6 +31,22 @@ class PersonnelController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'poste' => 'required|string|max:255',
+            'contact' => 'required|string|max:255',
+        ]);
+
+        $personnels = Personnel::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'poste' => $request->poste,
+            'contact' => $request->contact,
+        ]);
+        $personnels->save();
+
+        return redirect()->back()->with('success', 'Un personnel ajouté avec succès');
     }
 
     /**
@@ -60,6 +78,11 @@ class PersonnelController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+          
+    $personnel = Personnel::findOrFail($id); // Récupère l'enregistrement ou lance une exception si introuvable
+    
+    $personnel->delete(); // Supprime l'enregistrement
+
+    return redirect()->back()->with('success', 'Un personnel supprimé avec succès');; 
     }
 }

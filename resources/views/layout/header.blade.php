@@ -12,5 +12,6 @@
         <i class="feather icon-more-vertical"></i>
     </a>
 </div>
+
 @include('pages.navbar.header')
 

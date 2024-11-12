@@ -24,17 +24,29 @@
                             </thead>
                             <tbody>
                                 <!-- Exemple de contenu statique pour la table -->
+                                @forelse ($personnels as $personnel)
                                 <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>Membre du bureau</td>
-                                    <td>0707102515</td>
+                                    
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{$personnel->nom}}</td>
+                                    <td>{{$personnel->prenom}}</td>
+                                    <td>{{$personnel->poste}}</td>
+                                    <td>{{$personnel->contact}}</td>
                                     <td>
                                         <a href="#" class="btn btn-success" title="Modifier"><i class="feather icon-edit"></i></a>
-                                        <a href="#" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2"></i></a>
-                                    </td>
+                                        <form action="{{ route('personnel.destroy', $personnel->id) }}" method="post"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce personnel?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                        {{-- <a href="#" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2"></i></a> --}}
+                                    </td> 
                                 </tr>
+                                 @endforelse
                                 <!-- Autres lignes -->
                             </tbody>
                         </table>
@@ -55,29 +67,31 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method="POST" action="{{route('personnel.store')}}">
+                        @csrf
                         <div class="form-group">
                             <label for="lastName">Nom</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Entrez le nom">
+                            <input type="text" class="form-control" name="nom" id="lastName" placeholder="Entrez le nom">
                         </div>
                         <div class="form-group">
                             <label for="firstName">Prénom</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="Entrez le prénom">
+                            <input type="text" class="form-control" name="prenom" id="firstName" placeholder="Entrez le prénom">
                         </div>
                         <div class="form-group">
                             <label for="status">Status membre</label>
-                            <input type="text" class="form-control" id="status" placeholder="Entrez le statut">
+                            <input type="text" class="form-control" name="poste" id="status" placeholder="Entrez le statut">
                         </div>
                         <div class="form-group">
                             <label for="phone">Numéro de téléphone</label>
-                            <input type="text" class="form-control" id="phone" placeholder="Entrez le numéro de téléphone">
+                            <input type="text" class="form-control" name="contact" id="phone" placeholder="Entrez le numéro de téléphone">
                         </div>
+                        <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-primary">Enregistrer</button>
-                </div>
+                
             </div>
         </div>
     </div>

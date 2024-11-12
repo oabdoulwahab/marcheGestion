@@ -7,11 +7,11 @@
         <li class="nav-item">
             <a href="{{route('personnel.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Gestion du personnel</span></a>
         </li>
-       <li class="nav-item pcoded-hasmenu">
+       <li class="nav-item">
             <a href="{{route('market.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-clipboard"></i></span><span class="">Gestion du Marché</span></a>
         </li>
-        <li><a href="{{route('contrat.index')}}" class="nav-link ">Gestion des contrats</a></li>
-        <li><a href="{{route('secteur.index')}}" class="nav-link ">Gestion des secteurs d'activités</a></li>
+        <li class="nav-item"><a href="{{route('contrat.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-clipboard"></i></span><span class="">Gestion des contrats</span></a></li>
+        <li class="nav-item"><a href="{{route('secteur.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-clipboard"></i></span><span class="">Gestion des secteurs d'activités</span></a></li>
             
 
         <li class="nav-item">

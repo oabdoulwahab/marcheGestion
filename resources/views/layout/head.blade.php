@@ -13,6 +13,10 @@
 <meta name="description" content="" />
 <meta name="keywords" content="">
 <meta name="author" content="Phoenixcoded" />
+
+<!-- Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
 <!-- Favicon icon -->
 <link rel="icon" href="{{asset('assets/images/favicon.ico" type="image/x-icon')}}">
 

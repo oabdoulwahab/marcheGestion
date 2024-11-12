@@ -1,0 +1,27 @@
+.logo{
+    font-size: x-large;
+}
+.text-logo{
+    color: blue;
+}
+
+.text-contrat{
+    font-size: xx-large;
+   display: flex;
+   text-align: center;
+   justify-content: center;
+
+}
+.contrat{
+    display: flex;
+    padding: 10px 10px 10px;
+    margin: 10px;
+    border: none;
+    font-size: 19px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 5px;
+    width: 100%;
+    border: 1px rgb(250, 250, 253) solid;
+    height: auto;
+    
+}

@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('amount', 10, 2);
-            $table->timestamps();
+            $table->string('name'); 
+            $table->text('description')->nullable(); 
+            $table->enum('type', ['dépense', 'revenu']); 
+            $table->decimal('amount', 15, 2); 
+            $table->enum('status', ['En attente', 'Complété', 'Annulé']);
+            $table->timestamps(); 
         });
     }
 

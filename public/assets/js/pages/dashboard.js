@@ -252,3 +252,37 @@ function updateChart() {
               </tr>
             `;
           });
+
+
+  $('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Bouton qui déclenche la modale
+    var id = button.data('id');
+    var name = button.data('name');
+    var amount = button.data('amount');
+
+    var modal = $(this);
+    modal.find('#edit-expense-id').val(id);
+    modal.find('#edit-expense-name').val(name);
+    modal.find('#edit-expense-amount').val(amount);
+
+    // Modifier l'action du formulaire avec l'ID de l'enregistrement
+    modal.find('#edit-expense-form').attr('action', `/finance/${id}`);
+  });
+
+  // Remplir le formulaire d'édition avec les données de la dépense
+  function editFinance(id) {
+    // Récupérer les données de la dépense en fonction de l'ID
+    var finance = json($finances); // Convertir la collection en JSON pour l'utiliser en JS
+    var selectedFinance = finance.find(f => f.id === id);
+
+    // Remplir le formulaire avec les données de la dépense
+    document.getElementById('edit-expense-name').value = selectedFinance.name;
+    document.getElementById('edit-expense-description').value = selectedFinance.description;
+    document.getElementById('edit-expense-type').value = selectedFinance.type;
+    document.getElementById('edit-expense-amount').value = selectedFinance.amount;
+    document.getElementById('edit-expense-status').value = selectedFinance.status;
+
+    // Modifier l'action du formulaire pour inclure l'ID de la dépense
+    var formAction = "{{ route('finance.update', ':id') }}".replace(':id', selectedFinance.id);
+    document.getElementById('edit-expense-form').action = formAction;
+}

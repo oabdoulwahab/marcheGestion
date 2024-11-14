@@ -44,6 +44,8 @@ Route::get('/', function () {
 
     //routes pour la gestion de finances
     Route::resource('finance', FinancesController::class);
+    Route::put('/finance/{id}/{status}', [FinancesController::class, 'updateStatus'])->name('finance.updateStatus');
+
 //   });
 // });
 

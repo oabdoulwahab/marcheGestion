@@ -10,7 +10,14 @@ class Finance extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'description',
+        'type',
         'amount',
-        
+        'status',
+    ];
+
+    protected $attributes = [
+        'type' => 'dépense',
+        'status' => 'En attente'
     ];
 }

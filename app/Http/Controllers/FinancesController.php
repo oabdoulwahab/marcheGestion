@@ -13,8 +13,8 @@ class FinancesController extends Controller
     public function index()
     {
         //
-        $Finance = Finance::all();
-        return View('pages.gesfin.index', compact('Finance'));
+        $finances = Finance::all();
+        return View('pages.gesfin.index', compact('finances'));
 
     }
 
@@ -26,56 +26,98 @@ class FinancesController extends Controller
 
     // Stocker une nouvelle dépense
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0',
-        ]);
+{
+    // Validation des données
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'type' => 'nullable|in:revenu,dépense', 
+        'amount' => 'required|numeric|min:0',
+        'status' => 'nullable|in:En attente,Complété,Annulé', 
+    ]);
 
-        $Finance = Finance::create([
-            'name' => $request->name,
-            'amount' => $request->amount,
-        ]);
+    // Si le type n'est pas fourni, il prend 'dépense' par défaut
+    $type = $request->type ?? 'dépense';
 
-        return response()->json($Finance, 201);
-    }
+    // Si le statut n'est pas fourni, il prend 'En attente' par défaut
+    $status = $request->status ?? 'En attente';
+
+    // Créer une nouvelle transaction avec les valeurs fournies ou par défaut
+    Finance::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'type' => $type,
+        'amount' => $request->amount,
+        'status' => $status,
+    ]);
+
+    // Retourner à la liste avec un message de succès
+    return redirect()->route('finance.index')
+        ->with('success', 'Transaction créée avec succès.');
+}
+
 
     // Afficher une dépense spécifique
     public function show($id)
     {
-        $Finance = Finance::findOrFail($id);
-        return response()->json($Finance);
+        $finance = Finance::findOrFail($id);
+        return view('pages.gesfin.show',compact('finance'));
     }
 
     // Afficher un formulaire pour éditer une dépense
     public function edit($id)
     {
-        // Optionnel : retourner une vue pour éditer une dépense
+        // 
+        $finance = Finance::findOrFail($id);
+        return view('pages.gesfin.edit', compact('finance'));
     }
 
     // Mettre à jour une dépense
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0',
-        ]);
+{
+    // Valider les données du formulaire
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'type' => 'required|in:dépense,revenu',
+        'amount' => 'required|numeric',
+        'status' => 'required|in:En attente,Complété,Annulé',
+    ]);
 
-        $Finance = Finance::findOrFail($id);
-        $Finance->update([
-            'name' => $request->name,
-            'amount' => $request->amount,
-        ]);
+    // Mettre à jour la transaction
+    $finance = Finance::findOrFail($id);
+    $finance->update($request->all());
 
-        return response()->json($Finance);
-    }
+    // Rediriger avec un message de succès
+    return redirect()->route('finance.index')
+        ->with('success', 'Transaction mise à jour avec succès.');
+}
+
 
     // Supprimer une dépense
     public function destroy($id)
     {
-        $Finance = Finance::findOrFail($id);
-        $Finance->delete();
-
-        return response()->json(null, 204);
+        $finance = Finance::findOrFail($id);
+        $finance->delete();
+    
+        return redirect()->back()->with('success', 'Supprimé avec succès'); 
     }
+
+    public function updateStatus($id, $status)
+    {
+        $finance = Finance::findOrFail($id);
+        
+        // Validation du statut pour éviter les valeurs inattendues
+        if (in_array($status, ['En attente', 'Complété', 'Annulé'])) {
+            $finance->status = $status;
+            $finance->save();
+    
+            return back()->with('success', "Le statut a été mis à jour à \"$status\".");
+        }
+    
+        return back()->with('error', "Statut non valide.");
+    }
+    
+   
+
 }

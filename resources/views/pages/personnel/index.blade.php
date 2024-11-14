@@ -46,6 +46,8 @@
                                         {{-- <a href="#" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2"></i></a> --}}
                                     </td> 
                                 </tr>
+                                @empty
+                              
                                  @endforelse
                                 <!-- Autres lignes -->
                             </tbody>

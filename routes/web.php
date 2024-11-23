@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChartController;
+use App\Http\Controllers\MarketController;
 use App\Http\Controllers\ContratController;
 use App\Http\Controllers\SecteurController;
 use App\Http\Controllers\FinancesController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MarketController;
 use App\Http\Controllers\PersonnelController;
 
 /*
@@ -31,6 +32,7 @@ Route::get('/', function () {
     //routes pour le tableau de bord
     // Route::resource('dashboard', DashboardController::class);
 
+    Route::get('/chart', [ChartController::class, 'index']);
     //routes pour les secteurs d'acivités 
     Route::resource('secteur', SecteurController::class);
 

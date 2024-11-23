@@ -15,6 +15,7 @@
 <script src="{{asset('assets/js/pages/form.js')}}"></script>
 {{-- Contenu du dashboard --}}
 <script src="{{asset('assets/js/pages/dashboard.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/js/pages/chart.js')}}"></script>
 
 <!-- Ajout du script Bootstrap (assurez-vous que Bootstrap et jQuery sont inclus dans le projet) -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

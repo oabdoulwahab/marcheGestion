@@ -1,5 +1,6 @@
 
-<title>Flat Able - Premium Admin Template by Phoenixcoded</title>
+<title>@yield('title', config('app.name'))</title>
+
 <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 11]>
@@ -24,3 +25,5 @@
 <!-- vendor css -->
 <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/logo.css')}}">
+<!-- script de carte -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

@@ -1,5 +1,7 @@
 @extends('layout.layout')
 @section('content')
+@section('title', 'Tableau de bord')
+
 <div class="pcoded-main-container">
   <div class="pcoded-content">
       <!-- [ breadcrumb ] start -->
@@ -20,7 +22,7 @@
       </div>
       <!-- [ breadcrumb ] end -->
       <!-- [ Main Content ] start -->
-      {{-- @include('pages.dashboard.') --}}
+      @include('pages.dashboard.affiche.index')
       <!-- [ Main Content ] end -->
   </div>
 </div>

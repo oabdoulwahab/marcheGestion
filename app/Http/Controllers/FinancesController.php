@@ -73,7 +73,7 @@ class FinancesController extends Controller
     }
 
     // Mettre à jour une dépense
-    public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
     // Valider les données du formulaire
     $request->validate([
@@ -81,9 +81,8 @@ class FinancesController extends Controller
         'description' => 'required|string',
         'type' => 'required|in:dépense,revenu',
         'amount' => 'required|numeric',
-        'status' => 'required|in:En attente,Complété,Annulé',
     ]);
-
+   
     // Mettre à jour la transaction
     $finance = Finance::findOrFail($id);
     $finance->update($request->all());
@@ -92,6 +91,7 @@ class FinancesController extends Controller
     return redirect()->route('finance.index')
         ->with('success', 'Transaction mise à jour avec succès.');
 }
+
 
 
     // Supprimer une dépense

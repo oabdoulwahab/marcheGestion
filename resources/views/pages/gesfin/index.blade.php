@@ -1,5 +1,6 @@
 @extends('layout.layout')
 @section('content')
+@section('title', 'Gestion Market || Gestion des finances')
 <section class="pcoded-main-container">
     <div class="col-xl-12">
         <h2 class="mt-4">Gestion des finances</h2>
@@ -73,7 +74,13 @@
                         <th>Montant</th>
                         <th>Type</th>
                         <th>Statut</th>
+                        @foreach ($finances as $finance)
+                        @if ($finance->status !== 'Complété') <!-- Si le statut n'est pas "Complété" -->
+                        @if ($finance->status !== 'Annulé') <!-- Si le statut n'est pas "Complété" -->
                         <th>Actions</th>
+                        @endif
+                        @endif
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
@@ -88,16 +95,17 @@
                             // Définir les actions disponibles en fonction du statut actuel
                             $actions = [
                                 'En attente' => [
-                                    ['status' => 'Complété', 'label' => 'Compléter', 'class' => 'btn-primary'],
-                                    ['status' => 'Annulé', 'label' => 'Annuler', 'class' => 'btn-danger']
+                                    ['status' => 'Complété', 'label' => 'Compléter', 'class' => 'btn-primary', 'icon' => 'fas fa-highlighter'],
+                                    ['status' => 'Annulé', 'label' => 'Annuler', 'class' => 'btn-danger', 'icon' => 'fas fa-trash-alt']
                                 ],
                                 'Complété' => [
-                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary']
+                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary', 'icon' => 'fas fa-handshake']
                                 ],
                                 'Annulé' => [
-                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary']
+                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary', 'icon' => 'fas fa-handshake']
                                 ]
                             ];
+                          
                         @endphp
 
                         <td>
@@ -109,25 +117,25 @@
                                 <span class="badge badge-danger">Annulé</span>
                             @endif
                         </td>
+
                         <td>
-                            @foreach ($actions[$finance->status] as $action)
-                                <form action="{{ route('finance.updateStatus', ['id' => $finance->id, 'status' => $action['status']]) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn {{ $action['class'] }} btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir {{ $action['label'] }} ?')">
-                                        <i class="fas fa-trash-alt" title="{{ $action['label'] }} "></i></button>
-                                </form>
-                            @endforeach
+                            @if ($finance->status !== 'Complété') <!-- Si le statut n'est pas "Complété" -->
+                            @if ($finance->status !== 'Annulé') <!-- Si le statut n'est pas "Complété" -->
+                                @foreach ($actions[$finance->status] as $action)
+                                    <form action="{{ route('finance.updateStatus', ['id' => $finance->id, 'status' => $action['status']]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn {{ $action['class'] }} btn-sm" 
+                                            onclick="return confirm('Êtes-vous sûr de vouloir {{ $action['label'] }} ?')">
+                                            <i class="{{ $action['icon'] }}" title="{{ $action['label'] }}"></i>
+                                        </button>
+                                    </form>
+                                @endforeach
+                            <a href="{{ route('finance.edit', $finance->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit" title="Modifier"></i></a>
+                            @endif
+                            @endif
+                        </td>
 
-
-
-                                <a href="{{ route('finance.edit', $finance->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                                <form action="{{ route('finance.destroy', $finance->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                                </form>
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>

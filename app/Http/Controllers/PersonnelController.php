@@ -32,10 +32,14 @@ class PersonnelController extends Controller
     {
         //
         $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'poste' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        // 'email' => 'required|string|max:255',
+        'contact' => 'required|string|max:255',
+        'poste' => 'required|string|max:255',
+        'ventes' => 'required|string|max:255',
+        'chiffre_affaire' => 'required|string|max:255',
+           
         ]);
 
         $personnels = Personnel::create([
@@ -43,6 +47,8 @@ class PersonnelController extends Controller
             'prenom' => $request->prenom,
             'poste' => $request->poste,
             'contact' => $request->contact,
+            'ventes' => $request->prenom,
+            'chiffre_affaire' => $request->poste,
         ]);
         $personnels->save();
 

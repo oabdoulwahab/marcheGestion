@@ -1,167 +1,110 @@
 <div class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
+        <!-- Search Bar -->
         <li class="nav-item">
-            <a href="#!" class="pop-search"><i class="feather icon-search"></i></a>
+            <a href="#" class="pop-search"><i class="feather icon-search"></i></a>
             <div class="search-bar">
-                <input type="text" class="form-control border-0 shadow-none" placeholder="Search hear">
-                <button type="button" class="close" aria-label="Close">
+                <input type="text" class="form-control border-0 shadow-none" placeholder="Rechercher ici">
+                <button type="button" class="close" aria-label="Fermer">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
         </li>
-        {{-- <li class="nav-item">
-            <div class="dropdown">
-                <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu profile-notification ">
-                    <ul class="pro-body">
-                        <li><a href="user-profile.html" class="dropdown-item"><i class="fas fa-circle"></i> Profile</a></li>
-                        <li><a href="email_inbox.html" class="dropdown-item"><i class="fas fa-circle"></i> My Messages</a></li>
-                        <li><a href="auth-signin.html" class="dropdown-item"><i class="fas fa-circle"></i> Lock Screen</a></li>
-                    </ul>
-                </div>
-            </div>
-        </li> --}}
+
+        <!-- Mega Menu Dropdown -->
         <li class="nav-item">
             <div class="dropdown mega-menu">
                 <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
                     Les Secteurs d'activités
                 </a>
-                <div class="dropdown-menu profile-notification ">
+                <div class="dropdown-menu">
                     <div class="row no-gutters">
                         <div class="col">
-                            <h6 class="mega-title">Cotrat: Vente-location</h6>
-                            <ul class="pro-body">
-                                <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Table </a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Conteneur</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Magasin</a></li>
-                                {{-- <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Cards</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Modal</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="fas fa-circle"></i> Tabs & pills</a></li> --}}
+                            <h6 class="mega-title">Contrat: Vente-location</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="dropdown-item"><i class="fas fa-circle"></i> Table</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="fas fa-circle"></i> Conteneur</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="fas fa-circle"></i> Magasin</a></li>
                             </ul>
                         </div>
                         <div class="col">
                             <h6 class="mega-title">Secteur d'activités</h6>
-                            <ul class="pro-body">
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Diver</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Autres</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Vivrier frais</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Vivrier sec</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Legumes</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-minus"></i> Fruits</a></li>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Divers</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Autres</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Vivrier frais</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Vivrier sec</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Légumes</a></li>
+                                <li><a href="#" class="dropdown-item"><i class="feather icon-minus"></i> Fruits</a></li>
                             </ul>
                         </div>
-                        {{-- <div class="col">
-                            <h6 class="mega-title">Application</h6>
-                            <ul class="pro-body">
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-mail"></i> Email</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-clipboard"></i> Task</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-check-square"></i> To-Do</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-image"></i> Gallery</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-help-circle"></i> Helpdesk</a></li>
-                            </ul>
-                        </div>
-                        <div class="col">
-                            <h6 class="mega-title">Extension</h6>
-                            <ul class="pro-body">
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-file-plus"></i> Editor</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-file-minus"></i> Invoice</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-calendar"></i> Full calendar</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-upload-cloud"></i> File upload</a></li>
-                                <li><a href="#!" class="dropdown-item"><i class="feather icon-scissors"></i> Image cropper</a></li>
-                            </ul>
-                        </div> --}}
                     </div>
                 </div>
             </div>
         </li>
     </ul>
-    <ul class="navbar-nav ml-auto">
-        {{-- <li>
-            <div class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-                    <i class="icon feather icon-bell"></i>
-                    <span class="badge badge-pill badge-danger">5</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right notification">
-                    <div class="noti-head">
-                        <h6 class="d-inline-block m-b-0">Notifications</h6>
-                        <div class="float-right">
-                            <a href="#!" class="m-r-10">mark as read</a>
-                            <a href="#!">clear all</a>
-                        </div>
-                    </div>
-                    <ul class="noti-body">
-                        <li class="n-title">
-                            <p class="m-b-0">NEW</p>
+
+    <!-- User Authentication -->
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+            @guest
+                @if (Route::has('login'))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    </li>
+                @endif
+    
+                @if (Route::has('register'))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                    </li>
+                @endif
+            @else
+                <li class="nav-item dropdown">
+                    <a 
+                        id="userDropdown" 
+                        class="nav-link dropdown-toggle" 
+                        href="#" 
+                        role="button" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                    >
+                        
+                        <span class="avatar avatar-xxl"><img class="avatar avatar-xl" src="/images/avatar/1.jpg" />{{ Auth::user()->name }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{route('create')}}">
+                                <i class="feather icon-user"></i> Profile
+                            </a>
                         </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-                                <div class="media-body">
-                                    <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
-                                    <p>New ticket Added</p>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="dropdown-item" href="email_inbox.html">
+                                <i class="feather icon-mail"></i> My Messages
+                            </a>
                         </li>
-                        <li class="n-title">
-                            <p class="m-b-0">EARLIER</p>
+                        <li>
+                            <a class="dropdown-item" href="auth-signin.html">
+                                <i class="feather icon-lock"></i> Lock Screen
+                            </a>
                         </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
-                                <div class="media-body">
-                                    <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>10 min</span></p>
-                                    <p>Prchace New Theme and make payment</p>
-                                </div>
-                            </div>
+                        <li>
+                            <hr class="dropdown-divider">
                         </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-                                <div class="media-body">
-                                    <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>12 min</span></p>
-                                    <p>currently login</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="notification">
-                            <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
-                                <div class="media-body">
-                                    <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                    <p>Prchace New Theme and make payment</p>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit(); ">
+                                <i class="feather icon-log-out"></i> Logout
+                            </a>
                         </li>
                     </ul>
-                    <div class="noti-footer">
-                        <a href="#!">show all</a>
-                    </div>
-                </div>
-            </div>
-        </li> --}}
-        <li>
-            <div class="dropdown drp-user">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="feather icon-user"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right profile-notification">
-                    <div class="pro-head">
-                        <img src="assets/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image">
-                        <span>John Doe</span>
-                        <a href="auth-signin.html" class="dud-logout" title="Logout">
-                            <i class="feather icon-log-out"></i>
-                        </a>
-                    </div>
-                    <ul class="pro-body">
-                        <li><a href="user-profile.html" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
-                        <li><a href="email_inbox.html" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
-                        <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
-                    </ul>
-                </div>
-            </div>
-        </li>
-    </ul>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
+            @endguest
+        </ul>
+    </div>
+    
 </div>

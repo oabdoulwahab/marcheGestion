@@ -25,7 +25,7 @@ const markets = [
     }
 ];
 
-const sectors = [
+const secteurs = [
     { name: 'Alimentaire', count: 12 },
     { name: 'Artisanat', count: 8 },
     { name: 'Textile', count: 5 },
@@ -35,7 +35,7 @@ const sectors = [
 ];
 
 const marketContainer = document.getElementById('markets');
-const sectorContainer = document.getElementById('sectors');
+const sectorContainer = document.getElementById('secteurs');
 
 markets.forEach(market => {
     const marketCard = `
@@ -69,19 +69,19 @@ markets.forEach(market => {
     marketContainer.innerHTML += marketCard;
 });
 
-sectors.forEach(sector => {
-    const sectorCard = `
+secteurs.forEach(secteur => {
+    const secteurCard = `
         <div class="col-md-4 mb-4">
             <div class="border p-3 rounded-lg d-flex align-items-center">
                 <div class="mr-3"><i class="fas fa-building text-muted"></i></div>
                 <div>
-                    <p class="font-weight-bold text-dark mb-0">${sector.name}</p>
-                    <p class="text-muted small">${sector.count} marchands</p>
+                    <p class="font-weight-bold text-dark mb-0">${secteur.name}</p>
+                    <p class="text-muted small">${secteur.count} marchands</p>
                 </div>
             </div>
         </div>
     `;
-    sectorContainer.innerHTML += sectorCard;
+    sectorContainer.innerHTML += secteurCard;
 });
 
 

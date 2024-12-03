@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->foreignId('role_id')->default(3); // Le rôle par défaut est "user"
-            $table->foreign('role_id')->references('id')->on('roles');
+            // $table->foreignId('role_id')->default(3); // Le rôle par défaut est "user"
+            // $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null');
         });
     }
 

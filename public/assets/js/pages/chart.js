@@ -1,15 +1,36 @@
-google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            // Données transmises depuis Laravel (encodées en JSON)
-            var data = google.visualization.arrayToDataTable(json($data));
-
-            var options = {
-                title: 'les activité de la journée'
-            };
-
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-            chart.draw(data, options);
+const ctx = document.getElementById('secteurChart').getContext('2d');
+const secteurChart = new Chart(ctx, {
+    type: 'pie', // ou 'bar'
+    data: {
+        labels: json($dataSecteurs = pluck('name')),
+        datasets: [{
+            label: 'Pourcentage des Secteurs',
+            data: json($dataSecteurs=pluck('percentage')),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
         }
+    }
+});

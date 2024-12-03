@@ -14,7 +14,7 @@ class FinancesController extends Controller
     {
         //
         $finances = Finance::all();
-        return View('pages.gesfin.index', compact('finances'));
+        return View('pages.admin.gesfin.index', compact('finances'));
 
     }
 
@@ -61,7 +61,7 @@ class FinancesController extends Controller
     public function show($id)
     {
         $finance = Finance::findOrFail($id);
-        return view('pages.gesfin.show',compact('finance'));
+        return view('pages.admin.gesfin.show',compact('finance'));
     }
 
     // Afficher un formulaire pour éditer une dépense
@@ -69,7 +69,7 @@ class FinancesController extends Controller
     {
         // 
         $finance = Finance::findOrFail($id);
-        return view('pages.gesfin.edit', compact('finance'));
+        return view('pages.admin.gesfin.edit', compact('finance'));
     }
 
     // Mettre à jour une dépense

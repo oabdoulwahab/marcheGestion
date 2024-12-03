@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Personnel;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class PersonnelController extends Controller
     {
         //
         $personnels = Personnel::all();
-        return View('pages.personnel.index',compact('personnels'));
+        return View('pages.admin.personnel.index',compact('personnels'));
     }
 
     /**

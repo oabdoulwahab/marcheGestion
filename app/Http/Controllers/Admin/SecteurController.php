@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Models\Secteur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SecteurController extends Controller
 {
@@ -12,7 +14,8 @@ class SecteurController extends Controller
     public function index()
     {
         //
-        return View('pages.secteur.index');
+        $secteurs = Secteur::with('user')->get();
+        return View('pages.admin.secteur.index',compact('secteurs'));
 
     }
 
@@ -22,7 +25,7 @@ class SecteurController extends Controller
     public function create()
     {
         //
-        return View('pages.secteur.create');
+        return View('pages.admin.secteur.create');
 
     }
 
@@ -32,7 +35,21 @@ class SecteurController extends Controller
     public function store(Request $request)
     {
         //
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'fee' => 'required|numeric|min:0',
+        ]);
+
+        Secteur::create([
+            'name' => $validated['name'],
+            'fee' => $validated['fee'],
+            'user_id' => Auth::id(), // Enregistre l'utilisateur connecté
+        ]);
+
+        return redirect()->route('secteur.index')->with('success', 'Secteur créé avec succès.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -48,7 +65,7 @@ class SecteurController extends Controller
     public function edit($secteur)
     {
         //
-        return View('pages.secteur.edit');
+        return View('pages.admin.secteur.edit');
 
     }
 

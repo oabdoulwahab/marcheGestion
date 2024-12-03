@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MarketController extends Controller
+class ContratController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,7 +12,8 @@ class MarketController extends Controller
     public function index()
     {
         //
-        return View('pages.market.dashboard.index');
+        return View('pages.admin.market.contrat.index');
+
     }
 
     /**

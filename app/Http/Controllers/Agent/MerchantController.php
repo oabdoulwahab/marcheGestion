@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Agent;
 
 use Illuminate\Http\Request;
 
-class ContratController extends Controller
+class MerchantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,8 +12,6 @@ class ContratController extends Controller
     public function index()
     {
         //
-        return View('pages.market.contrat.index');
-
     }
 
     /**

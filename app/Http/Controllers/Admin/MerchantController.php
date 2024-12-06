@@ -12,6 +12,7 @@ class MerchantController extends Controller
     public function index()
     {
         //
+        return view ('pages.admin.market.marchant.index');
     }
 
     /**

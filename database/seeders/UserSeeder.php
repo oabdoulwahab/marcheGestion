@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => bcrypt('password'), // Vous pouvez utiliser Hash::make() pour plus de clarté
         ]);
-        $admin->assignRole('admin');
+        $admin->assignRole('admin','agent');
 
         // Créez un utilisateur Agent
         $agent = User::create([

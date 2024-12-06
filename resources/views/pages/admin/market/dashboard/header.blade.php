@@ -1,12 +1,91 @@
 <div class="container my-5">
-    
     <div class="card-header">
         <h2 class="font-weight-bold text-dark mb-4">Gestion des Marchés</h2>
     </div>
     <div class="row">
-        <!-- JavaScript génère les cartes pour chaque marché -->
-        <div id="markets" class="col-12 d-flex flex-wrap"></div>
+        <!-- Cartes pour chaque marché -->
+        <div id="markets" class="col-12 d-flex flex-wrap">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
+                        <div>
+                            <h3 class="h6 font-weight-bold text-dark">Marché Central</h3>
+                            <p class="text-muted">Centre-ville</p>
+                        </div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Type</span>
+                        <span class="font-weight-medium">Alimentaire</span>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Status</span>
+                        <span class="status-actif">Actif</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Revenue</span>
+                        <span class="font-weight-medium">€12,000</span>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
+                        <div>
+                            <h3 class="h6 font-weight-bold text-dark">Marché aux Fleurs</h3>
+                            <p class="text-muted">Quartier Sud</p>
+                        </div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Type</span>
+                        <span class="font-weight-medium">Floral</span>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Status</span>
+                        <span class="status-actif">Actif</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Revenue</span>
+                        <span class="font-weight-medium">€8,500</span>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
+                        <div>
+                            <h3 class="h6 font-weight-bold text-dark">Marché Artisanal</h3>
+                            <p class="text-muted">Vieille Ville</p>
+                        </div>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Type</span>
+                        <span class="font-weight-medium">Artisanat</span>
+                    </div>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <span class="text-muted">Status</span>
+                        <span class="status-preparation">En préparation</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Revenue</span>
+                        <span class="font-weight-medium">€0</span>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    
 
     <div class="bg-white rounded-lg shadow-sm p-4 mt-5">
         <h2 class="h5 font-weight-bold text-dark mb-3">Secteurs d'Activité</h2>

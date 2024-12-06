@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('contrats', function (Blueprint $table) {
-            //
-            
-            $table->foreignId('marchant_id')->constrained()->onDelete('cascade');
+        Schema::create('vendeurs', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('phone')->unique(); 
+            $table->string('email')->nullable(); 
+            $table->string('addresse')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -23,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contrats', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('vendeurs');
     }
 };

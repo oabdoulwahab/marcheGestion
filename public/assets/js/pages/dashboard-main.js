@@ -47,7 +47,12 @@ function floatchart() {
     });
     // [ support-chart ] end
     // [ power-card-chart1 ] start
-    $(function() {
+    $(function () {
+        // Récupération des données PHP
+        var montantMois = json($chartmontantMois);  // Par exemple : [50, 60, 70]
+        var montantToday = json($chartmontantToday); // Par exemple : [10, 20, 30]
+    
+        // Configuration du graphique
         var options = {
             chart: {
                 type: 'line',
@@ -62,39 +67,42 @@ function floatchart() {
             colors: ["#e74c3c"],
             stroke: {
                 curve: 'smooth',
-                width: 3,
+                width: 3
             },
             series: [{
-                name: 'series1',
-                data: [55, 35, 75, 50, 90, 50]
+                name: 'Montant',
+                data: montantMois.concat(montantToday) // Combinez les deux séries si nécessaire
             }],
+            xaxis: {
+                categories: ['Month', 'Today'] // Vérifiez les catégories si elles doivent correspondre
+            },
             yaxis: {
-                min: 10,
-                max: 100,
+                // Laissez ApexCharts déterminer automatiquement les limites
             },
             tooltip: {
                 theme: 'dark',
-                fixed: {
-                    enabled: false
-                },
                 x: {
-                    show: false,
+                    show: false
                 },
                 y: {
                     title: {
-                        formatter: function(seriesName) {
-                            return 'Power'
+                        formatter: function (seriesName) {
+                            return seriesName;
                         }
                     }
-                },
-                marker: {
-                    show: false
                 }
             }
         };
+    
+        // Initialisation et rendu du graphique
         var chart = new ApexCharts(document.querySelector("#power-card-chart1"), options);
         chart.render();
     });
+    
+
+
+    var chart = new ApexCharts(document.querySelector("#power-card-chart1"), options);
+    chart.render();
     // [ power-card-chart1 ] end
     // [ power-card-chart3 ] start
     $(function() {

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('marchants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('address');
-            $table->string('phone');
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
             $table->foreignId('secteur_id')->constrained()->onDelete('cascade');
-            $table->foreignId('contrat_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('contrat_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

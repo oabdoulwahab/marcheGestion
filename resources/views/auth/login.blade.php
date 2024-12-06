@@ -73,12 +73,12 @@
 @endsection --}}
 @include('layout.head')
 @section('title','GesMark')
-<div class="card-header">{{ __('Login') }}</div>
+<div class="card-header"></div>
 <div class="container">
     <div class="row">
       <div class="col-md-6 offset-md-3">
         <div class="logo">
-            <span class="text-logo">Gestion</span> Market
+          <h1 > <span class="text-logo">Gestion</span> Market</h1>
         </div>
         <div class="text-center mb-5 text-dark"></div>
         <div class="card my-5">

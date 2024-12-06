@@ -27,7 +27,7 @@ class MarketController extends Controller
             ];
         });
         $secteurs = Secteur::withCount('marchants')->get();
-        return View('pages.admin.market.dashboard.index',compact('secteurs','$totalSecteurs','dataSecteurs'));
+        return View('pages.admin.market.dashboard.index',compact('secteurs','totalSecteurs','dataSecteurs'));
     }
 
     /**

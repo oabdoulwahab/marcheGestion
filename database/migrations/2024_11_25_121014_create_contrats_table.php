@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('contrats', function (Blueprint $table) {
             $table->id();
             $table->string('numero_contrat');
-            $table->date('date_date');
+            $table->string('contrat_name');
+            $table->string('status')->default('en attente');
+            $table->date('date_debut');
             $table->date('date_fin');
             $table->decimal('montant', 10, 2);
             $table->timestamps();

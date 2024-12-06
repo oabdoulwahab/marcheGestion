@@ -11,9 +11,9 @@ class Marchant extends Model
     protected $fillable = [
         'name',
         'address',
-        'phone_number',
+        'phone',
         'secteur_id',
-        'contract_id',
+        'contrat_id',
     ];
 
     // Relation avec Sector

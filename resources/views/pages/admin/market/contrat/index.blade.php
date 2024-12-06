@@ -1,71 +1,150 @@
 @extends('layout.layout')
 @section('content')
 @section('title', 'Marché et contrat ')
+
 <section class="pcoded-main-container">
     <div class="pcoded-content">
-        <div class="col-md-12">
+        <!-- Votre code HTML ici -->
+        <div class="col-xl-2">
             <div class="card">
-                <div class="card-header">
-                    <h2>Listes des contrats</h2>
-                   <button class="btn btn-primary">Ajouter un contrat</button>
-                </div>
-                <div class="card-body table-border-style">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>NOM</th>
-                                    <th>Prénom</th>
-                                    <th>Type de contrat</th>
-                                    <th>Numéro de téléphone</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>Achat-table</td>
-                                    <td>0707102515</td>
-                                    <td>
-                                        <a href="" class="btn btn-success" title="Modifier"><i class="feather icon-edit" ></i></a>
-                                        <a href="" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2" ></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                    <td>0181254698</td>
-                                    <td>
-                                        <a href="" class="btn btn-success" title="Modifier"><i class="feather icon-edit" ></i></a>
-                                        <a href="" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2" ></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                    <td>0151752015</td>
-                                    <td>
-                                        <a href="" class="btn btn-success" title="Modifier"><i class="feather icon-edit" ></i></a>
-                                        <a href="" class="btn btn-danger" title="Supprimer"><i class="feather icon-trash-2" ></i></a>
-                                    </td>
-                                </tr>
-                                
-                            </tbody>
-                        </table>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addContractModal">Ajouter un contrat</button>
+            </div>
+        </div>
+
+        <!-- Modal de création de contrat -->
+        <div class="modal fade" id="addContractModal" tabindex="-1" role="dialog" aria-labelledby="addContractModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addContractModalLabel">Ajouter un contrat</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('contrat.store') }}" method="POST">
+                            @csrf
+                        
+                            <div class="form-group">
+                                <label for="contrat_name">Nom du contrat</label>
+                                <input type="text" name="contrat_name" id="contrat_name" class="form-control" required>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="vendeur_name">Nom du vendeur</label>
+                                <input type="text" name="vendeur_name" id="vendeur_name" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="vendeur_address">Adresse du vendeur</label>
+                                <input type="text" name="vendeur_address" id="vendeur_address" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="vendeur_phone">Téléphone du vendeur</label>
+                                <input type="text" name="vendeur_phone" id="vendeur_phone" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="vendeur_email">Email du vendeur</label>
+                                <input type="email" name="vendeur_email" id="vendeur_email" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="acheteur_name">Nom de l'acheteur</label>
+                                <input type="text" name="acheteur_name" id="acheteur_name" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="acheteur_phone">Téléphone de l'acheteur</label>
+                                <input type="text" name="acheteur_phone" id="acheteur_phone" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="acheteur_address">Adresse de l'acheteur</label>
+                                <input type="text" name="acheteur_address" id="acheteur_address" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="acheteur_activite">Activité de l'acheteur</label>
+                                <input type="text" name="acheteur_activite" id="acheteur_activite" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="acheteur_email">Email de l'acheteur</label>
+                                <input type="email" name="acheteur_email" id="acheteur_email" class="form-control">
+                                <small class="text-muted">Optionnel</small>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="date_debut">Date de début</label>
+                                <input type="date" name="date_debut" id="date_debut" class="form-control" required>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="date_fin">Date de fin</label>
+                                <input type="date" name="date_fin" id="date_fin" class="form-control" required>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="montant">Montant</label>
+                                <input type="number" name="montant" id="montant" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Ajouter le contrat</button>
+                        </form>
+                        
+                        
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-   
-</section>
 
+        <!-- Tableau des contrats -->
+        <div class="card-body table-border-style">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NOM</th>
+                            <th>Numéro de contrat</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($contrats as $contrat)
+                            <tr>
+                                <td>1</td>
+                                <td>{{ $contrat->contrat_name }}</td>
+                                <td>{{ $contrat->numero_contrat }}</td>
+                                <td>{{ $contrat->status }}</td>
+                                <td>
+                                    <a href="{{ route('contrat.show', $contrat->id) }}" class="btn btn-primary" title="Voir">
+                                        <i class="feather icon-eye"></i>
+                                    </a>
+                                    <a href="{{ route('contrat.edit', $contrat->id) }}" class="btn btn-success" title="Modifier">
+                                        <i class="feather icon-edit"></i>
+                                    </a>
+                                    <a href="{{ route('contrat.destroy', $contrat->id) }}" class="btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')">
+                                        <i class="feather icon-trash-2"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
 
 @endsection

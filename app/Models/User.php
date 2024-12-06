@@ -7,6 +7,7 @@ use Spatie\Permission\Traits\HasRoles; // Assurez-vous que l'importation est cor
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -45,6 +46,6 @@ class User extends Authenticatable
      */
     public function role()
     {
-        return $this->belongsTo(Roles::class, 'role_id');
+        return $this->belongsTo(Role::class, 'role');
     }
 }

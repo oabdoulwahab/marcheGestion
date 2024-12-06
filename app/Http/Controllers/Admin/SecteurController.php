@@ -38,12 +38,12 @@ class SecteurController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'fee' => 'required|numeric|min:0',
+            'description' => 'string|max:255|nullable',
         ]);
 
         Secteur::create([
             'name' => $validated['name'],
-            'fee' => $validated['fee'],
+            'description' => $validated['description'],
             'user_id' => Auth::id(), // Enregistre l'utilisateur connecté
         ]);
 

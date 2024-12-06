@@ -40,6 +40,15 @@ class DashboardController extends Controller
         ];
     });
 
+    $contrats = Contrat::all();
+
+    // Exemple de calcul pour les statistiques
+
+    $chartmontantMois = [50, 60, 70, 80, 90]; // Données mensuelles
+    $chartmontantToday = [20, 30, 40]; // Données pour aujourd'hui
+    $totalMontant = $contrats->sum('montant');
+    $montantMois = $contrats->whereBetween('date_debut', [now()->startOfMonth(), now()->endOfMonth()])->sum('montant');
+    $montantToday = $contrats->where('date_debut', now()->toDateString())->sum('montant');
     
     $totalContrats = Contrat::count();
     $espacesAttribues = Espace::whereNotNull('marchant_id')->count();
@@ -52,6 +61,11 @@ class DashboardController extends Controller
         'dataSecteurs' => $dataSecteurs,
         'espacesAttribues' => $espacesAttribues,
         'nombreMarchants' => $nombreMarchants,
+        'totalMontant'=> $totalMontant, 
+        'montantMois'=> $montantMois,
+         'montantToday'=> $montantToday,
+         'chartmontantMois'=> $chartmontantMois,
+         'chartmontantToday'=> $chartmontantToday,
         'totalContrats' => $totalContrats
     ]);
     

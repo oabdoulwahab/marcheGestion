@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Personnel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class PersonnelController extends Controller
 {
@@ -13,8 +16,9 @@ class PersonnelController extends Controller
     public function index()
     {
         //
-        $personnels = Personnel::all();
-        return View('pages.admin.personnel.index',compact('personnels'));
+        $personnels = User::all();
+        $roles = User::select('role')->distinct()->get();
+        return View('pages.admin.personnel.index',compact('personnels','roles'));
     }
 
     /**
@@ -29,31 +33,27 @@ class PersonnelController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-        $request->validate([
-        'nom' => 'required|string|max:255',
-        'prenom' => 'required|string|max:255',
-        // 'email' => 'required|string|max:255',
-        'contact' => 'required|string|max:255',
-        'poste' => 'required|string|max:255',
-        'ventes' => 'required|string|max:255',
-        'chiffre_affaire' => 'required|string|max:255',
-           
-        ]);
+{
+    
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'contact' => 'nullable|string|max:15',
+        'role' => 'required|string|exists:users,role',
+    ]);
 
-        $personnels = Personnel::create([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'poste' => $request->poste,
-            'contact' => $request->contact,
-            'ventes' => $request->prenom,
-            'chiffre_affaire' => $request->poste,
-        ]);
-        $personnels->save();
+    $personnel= User::create([
+        'name' => $request->input('name'),
+        'email' => $request->input('email'),
+        'password' => Hash::make('password'), // Mot de passe par défaut
+        'phone' => $request->input('contact'),
+        'role' => $request->input('role'),
+    ]);
+    $personnel->save();
 
-        return redirect()->back()->with('success', 'Un personnel ajouté avec succès');
-    }
+    return redirect()->route('personnel.index')->with('success', 'Utilisateur enregistré avec succès.');
+}
+
 
     /**
      * Display the specified resource.
@@ -69,6 +69,9 @@ class PersonnelController extends Controller
     public function edit(string $id)
     {
         //
+        $personnel = User::findOrFail($id);
+        $roles = User::select('role')->distinct()->get();
+        return view('pages.admin.personnel.edit',compact('personnel','roles'));
     }
 
     /**
@@ -77,6 +80,25 @@ class PersonnelController extends Controller
     public function update(Request $request, string $id)
     {
         //
+      
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $id,
+                'contact' => 'nullable|string|max:15',
+                'role' => 'required|string',
+            ]);
+    
+            $user = User::findOrFail($id);
+            $user->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('contact'),
+                'role' => $request->input('role'),
+                'password' => $request->filled('password') ? Hash::make($request->input('password')) : $user->password,
+            ]);
+    
+            return redirect()->route('personnel.index')->with('success', 'Utilisateur mis à jour avec succès.');
+        
     }
 
     /**

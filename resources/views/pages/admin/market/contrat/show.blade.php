@@ -2,7 +2,7 @@
 @section('content')
 <section class="pcoded-main-container">
     <div class="pcoded-content">
-@section('title', '{{ $contrat->numero_contrat }} ')
+@section('title', '' .$contrat->numero_contrat )
 <a href="{{ route('contrat.export.pdf', $contrat->id) }}" class="btn btn-danger">Exporter en PDF</a>
 <a href="{{ route('contrat.export.excel', $contrat->id) }}" class="btn btn-success">Exporter en Excel</a>
 

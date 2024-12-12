@@ -1,64 +1,74 @@
-@extends('layout.layout')
+@extends('layout.layout') 
 @section('content')
-    <section class="pcoded-main-container">
-        <div class="pcoded-content">
-            <h5 class="mt-5">Form Grid</h5>
-                        <hr>
-                        <form>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="nom">Nom</label>
-                                        <input type="text" value="" class="form-control" id="nom" placeholder="Ex: Konan">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="prenom">Prénom</label>
-                                        <input type="text" value="" class="form-control" id="prenom" placeholder="Ex: Albert">
-                                    </div>
-                                
-                                <div class="form-group col-md-6 ">
-                                    <label for="status">Status</label>
-                                    <input type="text" value="" class="form-control" id="status" placeholder="Ex: agent">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="phone">Numéro de téléphone</label>
-                                    <input type="phone" value=""  class="form-control" id="phone" placeholder="0748xxxxxxx">
-                                </div>
-
-                                {{-- <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="inputCity">City</label>
-                                        <input type="text" class="form-control" id="inputCity">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="inputState">State</label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected>select</option>
-                                            <option>Large select</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="inputZip">Zip</label>
-                                        <input type="text" class="form-control" id="inputZip">
-                                    </div>
-                                </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                                    <label class="form-check-label" for="gridCheck">Check me out</label>
-                                </div>
-                            </div> --}}
-                            <div class="d-grid gap-2 col-12 mx-auto">
-                                <button type="submit" class="btn btn-primary btn-lg active" data-mdb-ripple-init role="button" aria-pressed="true">Mettre à jour</button>
-                            
-                                <button type="submit" class="btn btn-danger btn-lg active" data-mdb-ripple-init role="button" aria-pressed="false">Annuler</button>
-                           
-                           
-                            </div>
-                        </form>
-                    </div>
-               
+<section class="pcoded-main-container">
+    <div class="pcoded-content container-fluid">
+        <!-- En-tête principale -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="font-weight-bold text-dark text-center">Modifier le Secteur</h1>
+            </div>
         </div>
-    </section>
 
+        <!-- Formulaire -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <form action="{{ route('secteur.update', $secteur->id) }}" method="POST" class="card shadow-sm p-4">
+                    @csrf
+                    @method('PUT')
 
+                    <!-- Gestion des erreurs -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- Champ Nom -->
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label font-weight-bold">Nom du Secteur</label>
+                        <input type="text" name="name" 
+                               class="form-control @error('name') is-invalid @enderror" 
+                               id="name" 
+                               value="{{ old('name', $secteur->name) }}" 
+                               placeholder="Entrez le nom" 
+                               required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Champ Description -->
+                    <div class="form-group mb-4">
+                        <label for="description" class="form-label font-weight-bold">Description</label>
+                        <textarea name="description" 
+                                  class="form-control @error('description') is-invalid @enderror" 
+                                  id="description" 
+                                  rows="4" 
+                                  placeholder="Entrez une description">{{ old('description', $secteur->description) }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary btn-lg" aria-pressed="true">
+                            <i class="feather icon-save mr-2"></i> Mettre à jour
+                        </button>
+                        <a href="{{ route('secteur.index') }}" 
+                           class="btn btn-danger btn-lg" 
+                           aria-pressed="false" 
+                           onclick="return confirm('Voulez-vous vraiment annuler les modifications ?')">
+                            <i class="feather icon-x-circle mr-2"></i> Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 @endsection

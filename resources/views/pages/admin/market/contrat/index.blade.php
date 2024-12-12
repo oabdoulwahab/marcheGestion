@@ -134,9 +134,14 @@
                                     <a href="{{ route('contrat.edit', $contrat->id) }}" class="btn btn-success" title="Modifier">
                                         <i class="feather icon-edit"></i>
                                     </a>
-                                    <a href="{{ route('contrat.destroy', $contrat->id) }}" class="btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')">
-                                        <i class="feather icon-trash-2"></i>
-                                    </a>
+                                    <form action="{{ route('contrat.destroy', $contrat->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </form>
+                                    
                                 </td>
                             </tr>
                         @endforeach

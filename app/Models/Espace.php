@@ -12,9 +12,10 @@ class Espace extends Model
         'numero_space',
         'secteur_id',
         'status',
-        'marchant_id',
     ];
 
+   
+    
     // Relation avec Secteur
     public function secteur()
     {
@@ -24,6 +25,6 @@ class Espace extends Model
     // Relation avec Marchant
     public function marchant()
     {
-        return $this->belongsTo(Marchant::class);
+        return $this->hasMany(Marchant::class);
     }
 }

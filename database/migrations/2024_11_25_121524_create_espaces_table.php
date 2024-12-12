@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('espaces', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_espace');
+            $table->string('numero_space');
             $table->foreignId('secteur_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['libre', 'occupée'])->default('libre');
-            $table->foreignId('marchant_id')->nullable()->constrained()->onDelete('set null');
+            $table->enum('status', ['Occupé', 'Disponible'])->default('Disponible')->nullable();
+            // $table->foreignId('marchant_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

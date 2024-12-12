@@ -13,7 +13,7 @@ class Marchant extends Model
         'address',
         'phone',
         'secteur_id',
-        'contrat_id',
+        'espace_id',
     ];
 
     // Relation avec Sector
@@ -23,14 +23,20 @@ class Marchant extends Model
     }
 
     // Relation avec Contract
-    public function contracts()
-    {
-        return $this->hasMany(Contrat::class);
-    }
+    // public function contracts()
+    // {
+    //     return $this->hasMany(Contrat::class);
+    // }
 
-    // Relation avec Payment
-    public function payments()
+    // Relation avec Espace
+    public function espace()
     {
-        return $this->hasMany(Payment::class);
+        return $this->belongsTo(Espace::class);
     }
+    
+    // // Relation avec Payment
+    // public function payments()
+    // {
+    //     return $this->hasMany(Payment::class);
+    // }
 }

@@ -143,6 +143,8 @@ class ContratController extends Controller
     public function destroy(string $id)
     {
         //
+        $contrat=Contrat::findOrFail($id);
+        $contrat->delete();
     }
 
     public function exportPDF($id)

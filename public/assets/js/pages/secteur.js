@@ -26,3 +26,64 @@ document.addEventListener('DOMContentLoaded', function () {
         sectorContainer.innerHTML += secteurCard;
     });
 });
+
+// Préparez les labels (mois) et les données pour le graphique
+// Utilisation de @json() pour passer les données Laravel au JavaScript
+var months = JSON.parse('@json($data->pluck("months"))');
+var totals = JSON.parse('@json($data->pluck("totals"))');
+
+// Vérifiez si l'élément HTML pour le graphique existe
+var chartElement = document.getElementById('myChart');
+if (chartElement) {
+    var ctx = chartElement.getContext('2d');
+
+    // Créez le graphique
+    var myChart = new Chart(ctx, {
+        type: 'bar', // Type de graphique : barres
+        data: {
+            labels: months.map(month => `Mois ${month}`), // Labels pour les mois
+            datasets: [{
+                label: 'Montant des contrats (en €)',
+                data: totals, // Données pour les montants
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur de fond
+                borderColor: 'rgba(75, 192, 192, 1)',       // Couleur de la bordure
+                borderWidth: 1                              // Épaisseur de la bordure
+            }]
+        },
+        options: {
+            responsive: true, // Rendre le graphique responsive
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top', // Position de la légende
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function (context) {
+                            return `${context.dataset.label}: ${context.raw} €`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true, // Commencer l'axe Y à zéro
+                    title: {
+                        display: true,
+                        text: 'Montant (en €)' // Titre pour l'axe Y
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mois' // Titre pour l'axe X
+                    }
+                }
+            }
+        }
+    });
+} else {
+    console.error('Élément graphique introuvable : myChart');
+}
+

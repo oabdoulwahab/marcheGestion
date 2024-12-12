@@ -1,58 +1,62 @@
-{{-- <!-- Graphiques -->
-<div id="line-chart-1"></div>
-<div id="area-chart-1"></div>
-<div id="bar-chart-1"></div>
-<div id="bar-chart-2"></div>
-<div id="pie-chart-1"></div>
-<div id="pie-chart-2"></div> --}}
-
-{{-- <!-- Graphiques -->
-<div id="support-chart"></div>
-<div id="power-card-chart1"></div>
-<div id="power-card-chart3"></div>
-<div id="seo-chart1"></div>--}}
 <div class="row">
-    <div class="col-xl-3 col-sm-6 col-12"> 
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <div class="media d-flex">
-              <div class="align-self-center">
-                <div id="seo-chart2"></div>
-              </div>
-              
+    <!-- Carte : Graphique SEO -->
+    
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Performance SEO</h6>
+                <div id="seo-chart2" class="chart-container"></div>
             </div>
-          </div>
         </div>
-      </div>
+        <!-- Carte : Contrats -->
+        
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <!-- Titre principal -->
+                    <h5 class="card-title mb-3 text-center fw-bold">Les contrats</h5>
+
+                    <!-- Montant total -->
+                    <h2 class="fw-bold text-center">
+                        {{ $totalMontant }} <span class="text-muted fs-6">Fr CFA</span>
+                    </h2>
+
+                    <!-- Détails des montants -->
+                    <div class="row mt-4">
+                        <!-- Montant du mois -->
+                        <div class="col-6 text-center">
+                            <h6 class="fw-bold mb-1">{{ $montantMois }} <span>Fr CFA</span></h6>
+                            <p class="text-muted small mb-0">Ce mois</p>
+                        </div>
+
+                        <!-- Montant d'aujourd'hui -->
+                        <div class="col-6 text-center">
+                            <h6 class="fw-bold mb-1">{{ $montantToday }} <span>Fr CFA</span></h6>
+                            <p class="text-muted small mb-0">Aujourd'hui</p>
+                        </div>
+                    </div>
+
+                    <!-- Graphique -->
+                    <div class="row mt-4">
+                        
+                            <div id="power-card-chart1" class="chart-container">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-{{--<div id="seo-chart2"></div>
-<div id="seo-chart3"></div>
- <div id="tot-lead"></div>  --}}
- <div class="row">
-  <div class="col-sm-6">
-      <div class="card">
-          <div class="card-body">
-              <h5 class="mb-3">Les contrats</h5>
-              <h2>{{ $totalMontant }}<span class="text-muted m-l-5 f-14"> Fr CFA</span></h2>
-              <div id="power-card-chart1"></div>
-              <div class="row">
-                  <div class="col col-auto">
-                      <div class="map-area">
-                          <h6 class="m-0">{{ $montantMois }} <span> Fr CFA</span></h6>
-                          <p class="text-muted m-0">Mois</p>
-                      </div>
-                  </div>
-                  <div class="col col-auto">
-                      <div class="map-area">
-                          <h6 class="m-0">{{ $montantToday }} <span> Fr CFA</span></h6>
-                          <p class="text-muted m-0">Aujourd'hui</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+
+  
+
+    <!-- Ajout d'autres cartes ou graphiques -->
+    <db-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Autres Données</h6>
+                <div id="power-card-chart3" class="chart-container"></div>
+            </div>
+        </div>
+    </div>
 </div>
-
-

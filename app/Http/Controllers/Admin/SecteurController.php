@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Marchant;
+use Exception;
 use App\Models\Secteur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,15 +59,18 @@ class SecteurController extends Controller
     public function show(string $id)
     {
         //
+        $marchand = Marchant::findOrFail($id);
+        return view('pages.admin.market.marchant.show',compact('marchand'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($secteur)
+    public function edit($id)
     {
         //
-        return View('pages.admin.secteur.edit');
+        $secteur=Secteur::findOrFail($id);
+        return View('pages.admin.secteur.edit',compact('secteur'));
 
     }
 
@@ -74,8 +79,36 @@ class SecteurController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+    // Validation des données du formulaire
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string|max:1000',
+    ]);
+
+    try {
+        // Récupérer le secteur à mettre à jour
+        $secteur = Secteur::findOrFail($id);
+
+        // Mettre à jour les champs avec les données validées
+        $secteur->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+        ]);
+
+        // Redirection avec un message de succès
+        return redirect()
+            ->route('secteur.index')
+            ->with('success', 'Le secteur a été mis à jour avec succès.');
+    } catch (Exception $e) {
+        // En cas d'erreur, redirection avec un message d'erreur
+        return redirect()
+            ->back()
+            ->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour du secteur.'])
+            ->withInput();
     }
+}
+
+    
 
     /**
      * Remove the specified resource from storage.

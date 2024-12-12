@@ -1,136 +1,105 @@
-<div class="container my-5">
-    <div class="card-header">
-        <h2 class="font-weight-bold text-dark mb-4">Gestion des Marchés</h2>
+<div class="container-fluid my-5">
+    <!-- Section Gestion des Marchés -->
+    <div class="card-header bg-light mb-4">
+        <h2 class="font-weight-bold text-dark">Gestion des Marchés</h2>
     </div>
     <div class="row">
-        <!-- Cartes pour chaque marché -->
-        <div id="markets" class="col-12 d-flex flex-wrap">
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm p-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
-                        <div>
-                            <h3 class="h6 font-weight-bold text-dark">Marché Central</h3>
-                            <p class="text-muted">Centre-ville</p>
-                        </div>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Type</span>
-                        <span class="font-weight-medium">Alimentaire</span>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Status</span>
-                        <span class="status-actif">Actif</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Revenue</span>
-                        <span class="font-weight-medium">€12,000</span>
-                    </div>
-                    <div class="mt-4">
-                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
-                    </div>
-                </div>
+        @forelse ($secteurs as $secteur)
+            <!-- Secteur -->
+            {{-- <div class="col-12">
+                <h3 class="h5 font-weight-bold text-dark mb-4">{{ $secteur->name }}</h3>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm p-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
-                        <div>
-                            <h3 class="h6 font-weight-bold text-dark">Marché aux Fleurs</h3>
-                            <p class="text-muted">Quartier Sud</p>
-                        </div>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Type</span>
-                        <span class="font-weight-medium">Floral</span>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Status</span>
-                        <span class="status-actif">Actif</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Revenue</span>
-                        <span class="font-weight-medium">€8,500</span>
-                    </div>
-                    <div class="mt-4">
-                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm p-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="icon-background mr-3"><i class="fas fa-store"></i></div>
-                        <div>
-                            <h3 class="h6 font-weight-bold text-dark">Marché Artisanal</h3>
-                            <p class="text-muted">Vieille Ville</p>
-                        </div>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Type</span>
-                        <span class="font-weight-medium">Artisanat</span>
-                    </div>
-                    <div class="mb-2 d-flex justify-content-between">
-                        <span class="text-muted">Status</span>
-                        <span class="status-preparation">En préparation</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Revenue</span>
-                        <span class="font-weight-medium">€0</span>
-                    </div>
-                    <div class="mt-4">
-                        <button class="btn btn-outline-primary btn-block">Voir les détails</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
 
-    <div class="bg-white rounded-lg shadow-sm p-4 mt-5">
-        <h2 class="h5 font-weight-bold text-dark mb-3">Secteurs d'Activité</h2>
-        <div class="row">
-            <!-- JavaScript génère les secteurs d'activité -->
-            <div id="sectors" class="row col-6 d-flex flex-wrap" data-sectors="{{ $secteurs->toJson() }}">
-                @forelse ($secteurs as $secteur)
-                <div class="col-md-6 mb-3">
-                    <div class="border p-3 rounded-lg d-flex align-items-center">
-                        <div class="mr-3"><i class="fas fa-building text-muted"></i></div>
-                        <div>
-                                <p class="font-weight-bold text-dark mb-2">{{ $secteur->name }}</p>
-                                <p class="text-muted small">{{ $secteur->marchants_count }} marchands</p>
+            <!-- Marchés -->
+            @forelse ($secteur->marchants as $marchand) --}}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card shadow-sm p-3 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-background mr-3">
+                                <i class="fas fa-store fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="h6 font-weight-bold text-dark">{{ $secteur->name }}</h4>
+                                <p class="text-muted mb-0">{{ $secteur->marchants_count }} marchands</p>
                             </div>
                         </div>
+                        <div class="mt-auto">
+                            <button class="btn btn-outline-primary btn-block"><a href="{{ route('marchant.show', $secteur->id) }}" class="btn btn-succes">Voir les détails</a> </button>
+                        </div>
                     </div>
-                @empty
-                    <p>Aucun secteur trouvé.</p>
-                @endforelse
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <h4>Secteurs et Pourcentages</h4>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Secteur</th>
-                                <th>Nombre de Marchants</th>
-                                <th>Pourcentage (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($dataSecteurs as $secteur)
-                                <tr>
-                                    <td>{{ $secteur['name'] }}</td>
-                                    <td>{{ $secteur['count'] }}</td>
-                                    <td>{{ $secteur['percentage'] }}%</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-            
-            {{-- <div id="sectors" class="col-12 d-flex flex-wrap"></div> --}}
+            @empty
+                <div class="col-12">
+                    <p class="text-muted">Aucun marchand trouvé pour ce secteur.</p>
+                </div>
+            @endforelse
+        {{-- @endforeach --}}
+    </div>
+
+    <!-- Secteurs d'Activité -->
+    {{-- <div class="bg-white rounded-lg shadow-sm p-4 mt-5">
+        <h2 class="h5 font-weight-bold text-dark mb-3">Secteurs d'Activité</h2>
+        <div class="row">
+            @forelse ($secteurs as $secteur)
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="sector-card border p-3 rounded-lg shadow-sm bg-white d-flex align-items-center">
+                        <div class="icon mr-3 text-primary">
+                            <i class="fas fa-building fa-2x"></i>
+                        </div>
+                        <div>
+                            <a href="#" class="text-decoration-none">
+                                <h4 class="font-weight-bold text-dark mb-1">{{ $secteur->name }}</h4>
+                            </a>
+                            <p class="text-muted small mb-0">{{ $secteur->marchants_count }} marchands</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12 text-center">
+                    <p class="text-muted">Aucun secteur trouvé.</p>
+                </div>
+            @endforelse
+        </div>
+    </div> --}}
+
+    <!-- Table des pourcentages -->
+    <div class="mt-5">
+        <h4 class="mb-4">Secteurs et leurs Pourcentages</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Secteur</th>
+                        <th>Nombre de Marchants</th>
+                        <th>Pourcentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($dataSecteurs as $secteur)
+                        <tr>
+                            <td>
+                                <i class="fas fa-chart-pie text-primary mr-2"></i>
+                                {{ $secteur['name'] }}
+                            </td>
+                            <td>{{ $secteur['count'] }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-2">{{ $secteur['percentage'] }}%</span>
+                                    <div class="progress flex-grow-1" style="height: 8px;">
+                                        <div class="progress-bar bg-primary" 
+                                             role="progressbar" 
+                                             style="width: {{ $secteur['percentage'] }}%;" 
+                                             aria-valuenow="{{ $secteur['percentage'] }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

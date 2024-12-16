@@ -79,7 +79,7 @@
                         <div class="card-body d-flex flex-column align-items-center">
                             <i class="icon-home primary mb-3 font-large-2"></i>
                             <div class="text-center flex-grow-1">
-                                <h3>{{ $espacesAttribues }}</h3>
+                                {{-- <h3>{{ $espacesAttribues }}</h3> --}}
                                 <span>Espaces Attribués</span>
                             </div>
                             <div class="mt-3">

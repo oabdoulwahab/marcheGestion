@@ -78,4 +78,13 @@ class EspaceController extends Controller
 
         return redirect()->back()->with('success', 'Espace supprimé avec succès.');
     }
+
+    public function details($id)
+    {
+        // Récupérer les détails de l'espace en utilisant l'ID
+        $espace = Espace::findOrFail($id);
+
+        // Retourner une vue avec les données
+        return view('pages.admin.market.espace.details', compact('espace'));
+    }
 }

@@ -165,4 +165,13 @@ class ContratController extends Controller
 
         return Excel::download(new ContratExport($contrat), 'contrat_' . $contrat->numero_contrat . '.xlsx');
     }
+
+    public function details($id)
+    {
+        // Récupérez les détails du contrat par ID
+        $contrat = Contrat::findOrFail($id);
+
+        // Retournez une vue avec les données du contrat
+        return view('pages.admin.market.contrat.details', compact('contrat'));
+    }
 }

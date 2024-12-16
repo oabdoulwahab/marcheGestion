@@ -5,7 +5,7 @@
                 <h4 class="text-uppercase">Résumé des Activités</h4>
             </div>
         </div>
-        <div class="row g-4">
+        <div class="row ">
             <!-- Card 1 -->
             <div class="col-xl-6 col-md-6 col-sm-12">
                 <div class="card h-100">

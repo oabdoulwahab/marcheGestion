@@ -36,11 +36,12 @@ Route::middleware(['auth', 'role:agent,admin'])->group(function () {
     //routes pour les secteurs d'acivités 
     Route::resource('secteur', SecteurController::class);
 
-
+    Route::get('/contrats/{id}', [ContratController::class, 'details'])->name('contrats.details');
     Route::resource('contrat', ContratController::class);
     Route::get('/contrat/{id}/export-pdf', [ContratController::class, 'exportPDF'])->name('contrat.export.pdf');
     Route::get('/contrat/{id}/export-excel', [ContratController::class, 'exportExcel'])->name('contrat.export.excel');
 
+    Route::get('/espaces/{id}', [EspaceController::class, 'details'])->name('espaces.details');
     Route::resource('market', MarketController::class);
     Route::resource('espace', EspaceController::class);
     Route::resource('marchant', MerchantController::class);

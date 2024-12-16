@@ -24,7 +24,7 @@
                     <div class="card-body d-flex align-items-center">
                         <i class="icon-home primary me-3 font-large-2"></i>
                         <div class="text-end flex-grow-1">
-                            <h3>{{ $espacesAttribues }}</h3>
+                            {{-- <h3>{{ $espacesAttribues }}</h3> --}}
                             <span>Espaces Attribués</span>
                         </div>
                     </div>

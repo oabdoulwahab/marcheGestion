@@ -71,7 +71,7 @@ class DashboardController extends Controller
             'data' => $data,
             'totalSecteurs' => $totalSecteurs,
             'dataSecteurs' => $dataSecteurs,
-            'espacesAttribues' => $espacesAttribues,
+            // 'espacesAttribues' => $espacesAttribues,
             'nombreMarchants' => $nombreMarchants,
             'totalMontant' => $totalMontant,
             'montantMois' => $montantMois,

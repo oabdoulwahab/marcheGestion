@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $montantToday = $contrats->where('date_debut', now()->toDateString())->sum('montant');
 
         $totalContrats = Contrat::count();
-        $espacesAttribues = Espace::whereNotNull('marchant_id')->count();
+        // $espacesAttribues = Espace::whereNotNull('marchant_id')->count();
         $nombreMarchants = Marchant::count();
 
 

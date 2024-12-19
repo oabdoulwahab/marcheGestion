@@ -25,13 +25,13 @@
       <div class="row">
           
           <!-- Section Affiche Bord -->
-          <div class="col-12 col-md-6 mb-4">
+          {{-- <div class="col-12 col-md-6 mb-4">
               @include('pages.admin.dashboard.affiche.bord')
-          </div>
+          </div> --}}
           <!-- Section Affiche Index -->
-          <div class="col-12 col-md-6 mb-4">
+          {{-- <div class="col-12 col-md-6 mb-4"> --}}
               @include('pages.admin.dashboard.affiche.index')
-          </div>
+          {{-- </div> --}}
 
       </div>
       <!-- [ Main Content ] end -->

@@ -86,10 +86,16 @@ class DashboardController extends Controller
         $secteurpercent = [
             'percentage' => $percentage,
         ];
+        $contrats = Contrat::all();
+        $marchants = Marchant::all();
+        $finances = Finance::all();
         // Passer la donnée à la vue
         return view('pages.admin.dashboard.index', [
             'secteurpercent' => $secteurpercent,
             'secteurs' => $secteurs,
+            'contrats' => $contrats,
+            'marchants' => $marchants,
+            'finances' => $finances,
             'contrat' => $contrat,
             'Marchant' => $Marchant,
             'data' => $data,

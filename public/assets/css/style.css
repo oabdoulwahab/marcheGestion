@@ -31870,3 +31870,17 @@ new-task label input[type="checkbox"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+  .indicator {
+        min-width: 30px;
+    }
+    .publications .rounded {
+        transition: transform 0.3s ease;
+    }
+    .publications .rounded:hover {
+        transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+        .publications .indicator {
+            font-size: 1.25rem;
+        }
+    }

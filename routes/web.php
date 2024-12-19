@@ -3,16 +3,17 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\ChartController;
-use App\Http\Controllers\Admin\MarketController;
-use App\Http\Controllers\Admin\ContratController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\EspaceController;
-use App\Http\Controllers\Admin\SecteurController;
-use App\Http\Controllers\Admin\FinancesController;
-use App\Http\Controllers\Admin\PersonnelController;
-use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\ChartController;
+use App\Http\Controllers\Admin\EspaceController;
+use App\Http\Controllers\Agent\MarketController;
+use App\Http\Controllers\Agent\ContratController;
+use App\Http\Controllers\Agent\SecteurController;
+use App\Http\Controllers\Admin\FinancesController;
+use App\Http\Controllers\Admin\MerchantController;
+use App\Http\Controllers\Admin\PersonnelController;
+use App\Http\Controllers\Admin\SecteurController as AdminSecteurController ;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,13 +29,16 @@ use App\Http\Controllers\DashboardController;
 Route::get('/bord', [DashboardController::class, 'index']);
 Route::get('/chart', [ChartController::class, 'index']);
 Auth::routes();
-Route::middleware(['auth', 'role:agent,admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::resource('/', DashboardController::class);
+    Route::resource('/', AdminDashboardController::class);
 
+
+    //routes pour la gestion de Personnels
+    Route::resource('personnel', PersonnelController::class);
 
     //routes pour les secteurs d'acivités 
-    Route::resource('secteur', SecteurController::class);
+    Route::resource('secteur', AdminSecteurController::class);
 
     Route::get('/contrats/{id}', [ContratController::class, 'details'])->name('contrats.details');
     Route::resource('contrat', ContratController::class);
@@ -50,8 +54,7 @@ Route::middleware(['auth', 'role:agent,admin'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('/', AdminDashboardController::class);
+Route::middleware(['auth', 'role:agent,admin'])->group(function () {
 
 
     //routes pour les secteurs d'acivités 
@@ -60,10 +63,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('contrat', ContratController::class);
 
-    Route::resource('market', MarketController::class);
-
-    //routes pour la gestion de Personnels
-    Route::resource('personnel', PersonnelController::class);
+    Route::resource('market', MarketController::class);  
 
     //routes pour la gestion de finances
     Route::resource('finance', FinancesController::class);

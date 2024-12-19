@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Agent;
 
 use App\Models\Espace;
 use App\Models\Secteur;

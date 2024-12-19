@@ -36,7 +36,7 @@
       </div>
       <!-- [ Main Content ] end -->
 
-      <!-- Chart Section -->
+      {{-- <!-- Chart Section -->
       <div class="row">
           <div class="col-12">
               <div class="card">
@@ -45,7 +45,7 @@
                   </div>
               </div>
           </div>
-      </div>
+      </div> --}}
 
   </div>
 </section>

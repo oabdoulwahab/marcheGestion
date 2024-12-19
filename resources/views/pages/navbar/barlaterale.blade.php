@@ -4,8 +4,11 @@
 </li>
 @if (auth()->user()->role == 'admin')
 <li class="nav-item">
-    <a href="{{route('index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Tableau de bord</span></a>
-</li> 
+    <a href="{{ route('index') }}" class="nav-link">
+        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+        <span class="pcoded-mtext">Tableau de bord</span>
+    </a>
+    </li> 
 <li class="nav-item">
     <a href="{{route('personnel.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Gestion du personnel</span></a>
 </li>

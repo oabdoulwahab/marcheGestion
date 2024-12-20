@@ -53,62 +53,54 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Récupération des données pour le graphique
-        var months = JSON.parse('@json($data->pluck("month"))');
-        var totals = JSON.parse('@json($data->pluck("total"))');
-
-        // Initialisation du graphique
-        var chartElement = document.getElementById('myChart');
-        if (chartElement) {
-            var ctx = chartElement.getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months.map(month => `Mois ${month}`),
-                    datasets: [{
-                        label: 'Montant des contrats (en €)',
-                        data: totals,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        },
-                        tooltip: {
-                            enabled: true,
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw} €`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Montant (en €)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Mois'
-                            }
-                        }
-                    }
+   document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const data = {
+            labels: {!! json_encode($dates) !!}, // Remplir avec les dates dynamiques
+            datasets: [
+                {
+                    label: 'Montant Total',
+                    data: {!! json_encode($montants) !!}, // Remplir avec les montants dynamiques
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.4,
                 }
-            });
-        } else {
-            console.error('Élément graphique introuvable : myChart');
-        }
+            ]
+        };
+
+        const options = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Dates'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Montants (Fr CFA)'
+                    },
+                    beginAtZero: true
+                }
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
     });
 </script>

@@ -25,31 +25,25 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Récupérer les montants des contrats par mois et aujourd'hui
-        $totalMontant = Contrat::sum('montant');
-        $montantMois = Contrat::whereMonth('date_debut', now()->month)->sum('montant');
-        $montantToday = Contrat::whereDate('date_debut', today())->sum('montant');
 
-        // Récupérer les données pour le graphique (par exemple, montants mensuels)
-        $data = Contrat::selectRaw('MONTH(date_debut) as month, sum(montant) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-        // Compter les secteurs d'activité
+        // Initialisation des variables pour stocker les montants par date
+        $dates = [];
+        $montants = [];
+
+        // Obtenir les dates des 7 derniers jours
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $dates[] = $date;
+
+            // Calculer le montant total pour chaque date
+            $totalForDate = Finance::whereDate('created_at', $date)->sum('amount')
+                + Contrat::whereDate('created_at', $date)->sum('montant');
+                // Remplacer 'espace_id' par le champ approprié si nécessaire
+
+            $montants[] = $totalForDate;
+        }
         // Récupérer tous les secteurs
-        $secteurs = Secteur::all();
-
-        $contrats = Contrat::all();
-
-        // Exemple de calcul pour les statistiques
-
-        $chartmontantMois = [50, 60, 70, 80, 90]; // Données mensuelles
-        $chartmontantToday = [20, 30, 40]; // Données pour aujourd'hui
-        $totalMontant = $contrats->sum('montant');
-        $montantMois = $contrats->whereBetween('date_debut', [now()->startOfMonth(), now()->endOfMonth()])->sum('montant');
-        $montantToday = $contrats->where('date_debut', now()->toDateString())->sum('montant');
-
-
+        $finances = Finance::all();
         // Récupérer tous les contrats
         $contrats = Contrat::all();
 
@@ -86,31 +80,81 @@ class DashboardController extends Controller
         $secteurpercent = [
             'percentage' => $percentage,
         ];
-        $contrats = Contrat::all();
-        $marchants = Marchant::all();
-        $finances = Finance::all();
+        $today = Carbon::today();
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $startOfMonth = Carbon::now()->startOfMonth();
+
+        // Publications pour aujourd'hui
+        $financesToday = Finance::whereDate('created_at', $today)->count();
+        $contratsToday = Contrat::whereDate('created_at', $today)->count();
+        $marchantsToday = Marchant::whereDate('created_at', $today)->count();
+
+        // Publications pour la semaine
+        $financesWeek = Finance::whereBetween('created_at', [$startOfWeek, $today])->count();
+        $contratsWeek = Contrat::whereBetween('created_at', [$startOfWeek, $today])->count();
+        $marchantsWeek = Marchant::whereBetween('created_at', [$startOfWeek, $today])->count();
+
+        // Publications pour le mois
+        $financesMonth = Finance::whereBetween('created_at', [$startOfMonth, $today])->count();
+        $contratsMonth = Contrat::whereBetween('created_at', [$startOfMonth, $today])->count();
+        $marchantsMonth = Marchant::whereBetween('created_at', [$startOfMonth, $today])->count();
+
+
+
+
         // Passer la donnée à la vue
         return view('pages.admin.dashboard.index', [
             'secteurpercent' => $secteurpercent,
-            'secteurs' => $secteurs,
-            'contrats' => $contrats,
-            'marchants' => $marchants,
+            'financesToday' => $financesToday,
+            'contratsToday' => $contratsToday,
+            'marchantsToday' => $marchantsToday,
+            'financesWeek' => $financesWeek,
+            'contratsWeek' => $contratsWeek,
+            'financesMonth' => $financesMonth,
+            'contratsMonth' => $contratsMonth,
+            'marchantsMonth' => $marchantsMonth,
+            'marchantsWeek' => $marchantsWeek,
             'finances' => $finances,
             'contrat' => $contrat,
             'Marchant' => $Marchant,
-            'data' => $data,
             'totalSecteurs' => $totalSecteurs,
             // 'espacesAttribues' => $espacesAttribues,
             'nombreMarchants' => $nombreMarchants,
-            'totalMontant' => $totalMontant,
-            'montantMois' => $montantMois,
-            'montantToday' => $montantToday,
-            'chartmontantMois' => $chartmontantMois,
-            'chartmontantToday' => $chartmontantToday,
+            'dates' => $dates,
+            'montants' => $montants,
+            'totalMontant' => array_sum($montants), // Montant total pour tous les jours
+            'montantMois' => $this->getMonthlyTotal(),
+            'montantToday' => $this->getTodayTotal(),
             'totalContrats' => $totalContrats
         ]);
     }
 
+
+
+    // Calculer le montant total du mois courant
+    private function getMonthlyTotal()
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+
+        $monthlyTotal = Finance::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('amount')
+            + Contrat::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('montant')
+            + Marchant::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('espace_id');
+
+        return $monthlyTotal;
+    }
+
+    // Calculer le montant total d'aujourd'hui
+    private function getTodayTotal()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+
+        $todayTotal = Finance::whereDate('created_at', $today)->sum('amount')
+            + Contrat::whereDate('created_at', $today)->sum('montant')
+            + Marchant::whereDate('created_at', $today)->sum('espace_id');
+
+        return $todayTotal;
+    }
 
 
     /**

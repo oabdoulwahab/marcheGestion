@@ -17,7 +17,7 @@ class Finance extends Model
     ];
 
     protected $attributes = [
-        'type' => 'dépense',
+        'type' => 'vente',
         'status' => 'En attente'
     ];
 }

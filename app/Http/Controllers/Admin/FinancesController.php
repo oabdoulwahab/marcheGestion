@@ -31,13 +31,13 @@ class FinancesController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
-        'type' => 'nullable|in:revenu,dépense', 
+        'type' => 'nullable|in:Vente,Achat', 
         'amount' => 'required|numeric|min:0',
         'status' => 'nullable|in:En attente,Complété,Annulé', 
     ]);
 
     // Si le type n'est pas fourni, il prend 'dépense' par défaut
-    $type = $request->type ?? 'dépense';
+    $type = $request->type ?? 'Vente';
 
     // Si le statut n'est pas fourni, il prend 'En attente' par défaut
     $status = $request->status ?? 'En attente';
@@ -79,7 +79,7 @@ public function update(Request $request, $id)
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'required|string',
-        'type' => 'required|in:dépense,revenu',
+        'type' => 'required|in:Vente,Achat',
         'amount' => 'required|numeric',
     ]);
    

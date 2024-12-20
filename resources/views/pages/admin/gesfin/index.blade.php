@@ -40,8 +40,8 @@
                                         <div class="form-group">
                                             <label for="type">Type</label>
                                             <select name="type" class="form-control" id="type">
-                                                <option value="revenu">Revenu</option>
-                                                <option value="dépense" selected>Dépense</option> <!-- Type par défaut -->
+                                                <option value="Achat">Achat</option>
+                                                <option value="Vente" selected>Vente</option> <!-- Type par défaut -->
                                             </select>
                                         </div>
                                         <div class="form-group">

@@ -21,7 +21,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <h4>« Le Vendeur »</h4>
+                <h2>« Le Vendeur »</h2>
                 <ul>
                     <li><strong>Nom et prénom du vendeur :</strong> {{ $contrat->vendeur->name }}</li>
                     <li><strong>Objet :</strong> Conteneur</li>
@@ -31,7 +31,7 @@
                 </ul>
             </div>
             <div class="col-md-6">
-                <h4>« L’Acheteur »</h4>
+                <h2>« L’Acheteur »</h2>
                 <ul>
                     <li><strong>Nom et prénom de l’acheteur :</strong> {{ $contrat->acheteur->name }}</li>
                     <li><strong>Tél :</strong> {{ $contrat->acheteur->phone }}</li>
@@ -54,7 +54,7 @@
 
         {{-- <!-- QR Code -->
         <div class="text-center">
-            <h4>Scan pour Détails</h4>
+            <h2>Scan pour Détails</h2>
             <div id="qrcode"></div>
             <p class="mt-2">Scannez ce code pour voir plus d'informations.</p>
         </div> --}}

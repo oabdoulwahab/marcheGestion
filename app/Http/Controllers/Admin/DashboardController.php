@@ -139,7 +139,8 @@ class DashboardController extends Controller
 
         $monthlyTotal = Finance::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('amount')
             + Contrat::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('montant')
-            + Marchant::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('espace_id');
+            // + Marchant::whereBetween('created_at', [$startOfMonth, $endOfMonth])->sum('espace_id')
+            ;
 
         return $monthlyTotal;
     }
@@ -151,7 +152,8 @@ class DashboardController extends Controller
 
         $todayTotal = Finance::whereDate('created_at', $today)->sum('amount')
             + Contrat::whereDate('created_at', $today)->sum('montant')
-            + Marchant::whereDate('created_at', $today)->sum('espace_id');
+            // + Marchant::whereDate('created_at', $today)->sum('espace_id')
+            ;
 
         return $todayTotal;
     }

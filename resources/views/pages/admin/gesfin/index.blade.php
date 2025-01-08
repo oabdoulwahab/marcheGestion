@@ -1,145 +1,89 @@
 @extends('layout.layout')
-@section('content')
+
 @section('title', 'Gestion Market || Gestion des finances')
+
+@section('content')
 <section class="pcoded-main-container">
     <div class="col-xl-12">
         <h2 class="mt-4">Gestion des finances</h2>
         <div class="card">
             <div class="card-header">
                 <button class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Ajouter une dépense</button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addCotisationModal">Ajouter une cotisation</button>
             </div>
         </div>
         <hr>
     </div>
-      <!-- Fenêtre modale pour ajouter un membre -->
-       <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="addMemberModalLabel">Ajouter une Dépense</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      <div class="row">
-                          <div class="col-md-12">
-                              <div class="card">
-                                  <div class="card-body">
-                                      <form action="{{ route('finance.store') }}" method="POST">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="name">Nom de la transaction</label>
-                                            <input type="text" name="name" class="form-control" id="name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <input type="text" name="description" class="form-control" id="description">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="type">Type</label>
-                                            <select name="type" class="form-control" id="type">
-                                                <option value="Achat">Achat</option>
-                                                <option value="Vente" selected>Vente</option> <!-- Type par défaut -->
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="amount">Montant</label>
-                                            <input type="number" name="amount" class="form-control" id="amount" required>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn btn-primary">Créer</button>
-                                    </form>
 
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      </div>
+    <!-- Fenêtre modale pour ajouter une cotisation -->
+    @include('pages.admin.gesfin.cotisation')
+
+     <!-- Fenêtre modale pour ajouter une paiement -->
+     @include('pages.admin.gesfin.paiement')
+
+       <!-- Fenêtre modale pour ajouter une achat_vente -->
+       @include('pages.admin.gesfin.achat_vente')
+
     <!-- Statistiques et Transactions Récentes -->
     <div class="container my-5">
         <h1 class="fs-2 fw-bold text-dark">Gestion des Finances</h1>
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th>Montant</th>
-                        <th>Type</th>
-                        <th>Statut</th>
-                        @foreach ($finances as $finance)
-                        @if ($finance->status !== 'Complété') <!-- Si le statut n'est pas "Complété" -->
-                        @if ($finance->status !== 'Annulé') <!-- Si le statut n'est pas "Complété" -->
-                        <th>Actions</th>
-                        @endif
-                        @endif
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($finances as $finance)
-                        <tr>
-                            <td>{{ $finance->id }}</td>
-                            <td>{{ $finance->name }}</td>
-                            <td>{{ $finance->description }}</td>
-                            <td>{{ $finance->amount }} €</td>
-                            <td>{{ $finance->type }}</td>
-                            @php
-                            // Définir les actions disponibles en fonction du statut actuel
-                            $actions = [
-                                'En attente' => [
-                                    ['status' => 'Complété', 'label' => 'Compléter', 'class' => 'btn-primary', 'icon' => 'fas fa-highlighter'],
-                                    ['status' => 'Annulé', 'label' => 'Annuler', 'class' => 'btn-danger', 'icon' => 'fas fa-trash-alt']
-                                ],
-                                'Complété' => [
-                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary', 'icon' => 'fas fa-handshake']
-                                ],
-                                'Annulé' => [
-                                    ['status' => 'En attente', 'label' => 'En attente', 'class' => 'btn-secondary', 'icon' => 'fas fa-handshake']
-                                ]
-                            ];
-                          
-                        @endphp
-
-                        <td>
-                            @if ($finance->status === 'En attente')
-                                <span class="badge badge-secondary">En attente</span>
-                            @elseif ($finance->status === 'Complété')
-                                <span class="badge badge-primary">Complété</span>
-                            @elseif ($finance->status === 'Annulé')
-                                <span class="badge badge-danger">Annulé</span>
-                            @endif
-                        </td>
-
-                        <td>
-                            @if ($finance->status !== 'Complété') <!-- Si le statut n'est pas "Complété" -->
-                            @if ($finance->status !== 'Annulé') <!-- Si le statut n'est pas "Complété" -->
-                                @foreach ($actions[$finance->status] as $action)
-                                    <form action="{{ route('finance.updateStatus', ['id' => $finance->id, 'status' => $action['status']]) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn {{ $action['class'] }} btn-sm" 
-                                            onclick="return confirm('Êtes-vous sûr de vouloir {{ $action['label'] }} ?')">
-                                            <i class="{{ $action['icon'] }}" title="{{ $action['label'] }}"></i>
-                                        </button>
-                                    </form>
-                                @endforeach
-                            <a href="{{ route('finance.edit', $finance->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit" title="Modifier"></i></a>
-                            @endif
-                            @endif
-                        </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="row">
+                @forelse ($cotisations as $cotisation)
+                  
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="card shadow-sm p-3 h-100">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-background mr-3">
+                                        <i class="fas fa-store fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="h6 font-weight-bold text-dark">{{ $cotisation->date_debut }}</h4>
+                                        <p class="text-muted mb-0">{{ $cotisation->marchants_count }} Adhérants</p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-outline-primary btn-block"><a href="{{ route('cotisation.show', $cotisation->id) }}" class="btn btn-succes">Voir les détails</a> </button>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-muted">Aucun marchand trouvé pour ce secteur.</p>
+                        </div>
+                    @endforelse
+            </div>
+            {{-- Vous pouvez ajouter ici un tableau ou d'autres éléments si nécessaire --}}
+        </div>
+    
+        <h1 class="fs-2 fw-bold text-dark">Gestion des Finances</h1>
+        <div class="table-responsive">
+            <div class="row">
+                @forelse ($cotisations as $cotisation)
+                  
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="card shadow-sm p-3 h-100">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-background mr-3">
+                                        <i class="fas fa-store fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="h6 font-weight-bold text-dark">{{ $cotisation->date_debut }}</h4>
+                                        <p class="text-muted mb-0">{{ $cotisation->marchants_count }} marchands</p>
+                                    </div>
+                                </div>
+                                <div class="mt-auto">
+                                    <button class="btn btn-outline-primary btn-block"><a href="{{ route('marchant.show', $cotisation->id) }}" class="btn btn-succes">Voir les détails</a> </button>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-muted">Aucun marchand trouvé pour ce secteur.</p>
+                        </div>
+                    @endforelse
+            </div>
+            {{-- Vous pouvez ajouter ici un tableau ou d'autres éléments si nécessaire --}}
         </div>
     </div>
 </section>

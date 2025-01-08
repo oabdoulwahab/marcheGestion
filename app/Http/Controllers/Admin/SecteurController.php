@@ -115,6 +115,8 @@ class SecteurController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $secteur = Secteur::findOrFail($id);
+        $secteur->delete();
+        return redirect()->back()->with('success', 'Supprimé avec succès');
     }
 }

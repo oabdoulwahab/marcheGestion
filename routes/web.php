@@ -3,16 +3,18 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\Admin\ChartController;
 use App\Http\Controllers\Admin\EspaceController;
 use App\Http\Controllers\Agent\MarketController;
 use App\Http\Controllers\Agent\ContratController;
 use App\Http\Controllers\Agent\SecteurController;
 use App\Http\Controllers\Admin\FinancesController;
-use App\Http\Controllers\Admin\MerchantController;
+use App\Http\Controllers\Agent\MerchantController;
 use App\Http\Controllers\Admin\PersonnelController;
-use App\Http\Controllers\Admin\SecteurController as AdminSecteurController ;
+use App\Http\Controllers\Admin\SecteurController as AdminSecteurController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 /*
@@ -53,6 +55,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/marchant/{id}', [MerchantController::class, 'show'])->name('marchant.show');
 });
 
+Route::resource('cotisation', CotisationController::class);
+Route::post('/cotisations/{id}/add-adherents', [CotisationController::class, 'addAdherents'])
+    ->name('cotisation.addAdherents');
+Route::delete('/cotisations/{cotisation}/remove-adherent/{marchant}', [CotisationController::class, 'removeAdherent'])
+    ->name('cotisation.removeAdherent');
+Route::resource('paiement', PaiementController::class);
+// Route pour calculer le montant total à payer
+Route::get('/montant-total/{marchantId}/{cotisationId}', [PaiementController::class, 'montantTotalAPayer']);
+
 
 Route::middleware(['auth', 'role:agent,admin'])->group(function () {
 
@@ -63,8 +74,10 @@ Route::middleware(['auth', 'role:agent,admin'])->group(function () {
 
     Route::resource('contrat', ContratController::class);
 
-    Route::resource('market', MarketController::class);  
-
+    Route::resource('market', MarketController::class);
+    // Route pour afficher les détails d'un adhérent dans une cotisation
+    Route::get('/cotisations/{cotisationId}/marchants/{marchantId}', [MerchantController::class, 'showAdherent'])
+        ->name('cotisation.marchant.show');
     //routes pour la gestion de finances
     Route::resource('finance', FinancesController::class);
     Route::put('/finance/{id}/{status}', [FinancesController::class, 'updateStatus'])->name('finance.updateStatus');

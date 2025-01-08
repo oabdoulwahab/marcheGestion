@@ -9,14 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('cotisations', function (Blueprint $table) {
             $table->id();
-            $table->decimal('montant', 10, 2);
-            $table->date('date_payment');
-            $table->foreignId('marchant_id')->constrained()->onDelete('cascade');
-            $table->enum('type_payment', ['Cotisation', 'Achat']);
+            $table->decimal('montant_total', 10, 2); // Montant total de la cotisation
+            $table->date('date_debut'); // Date de début de la cotisation
+            $table->date('date_fin'); // Date de fin de la cotisation
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('cotisations');
     }
 };

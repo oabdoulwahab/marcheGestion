@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent;
 use App\Models\Espace;
 use App\Models\Secteur;
 use App\Models\Marchant;
+use App\Models\Cotisation;
 use Illuminate\Http\Request;
 
 class MerchantController extends Controller
@@ -126,5 +127,25 @@ class MerchantController extends Controller
         $marchant->delete();
 
         return redirect()->back()->with('success', 'Commerçant supprimé avec succès');
+    }
+
+    public function showAdherent($cotisationId, $marchantId)
+    {
+        // Récupérer la cotisation
+        $cotisation = Cotisation::findOrFail($cotisationId);
+    
+        // Récupérer l'adhérent avec ses paiements pour cette cotisation
+        $marchant = Marchant::with(['paiements' => function ($query) use ($cotisationId) {
+            $query->where('cotisation_id', $cotisationId);
+        }])->findOrFail($marchantId);
+    
+        // dd($marchant);
+        // Calculer les montants pour l'adhérent
+        $montantTotal = $cotisation->montant_total;
+        $montantDejaPaye = $marchant->paiements->sum('montant');
+        $resteAPayer = $montantTotal - $montantDejaPaye;
+    
+        // Passer les données à la vue
+        return view('pages.admin.cotisation.marchant.show', compact('cotisation', 'marchant', 'montantTotal', 'montantDejaPaye', 'resteAPayer'));
     }
 }

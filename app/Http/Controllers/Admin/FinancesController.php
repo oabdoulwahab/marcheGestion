@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Cotisation;
 use App\Models\Finance;
+use App\Models\Marchant;
 use Illuminate\Http\Request;
 
 class FinancesController extends Controller
@@ -14,7 +16,9 @@ class FinancesController extends Controller
     {
         //
         $finances = Finance::all();
-        return View('pages.admin.gesfin.index', compact('finances'));
+        $marchands = Marchant::all();
+        $cotisations = Cotisation::withCount('marchants')->get();
+        return View('pages.admin.gesfin.index', compact('finances','marchands','cotisations'));
 
     }
 

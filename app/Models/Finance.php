@@ -20,4 +20,10 @@ class Finance extends Model
         'type' => 'vente',
         'status' => 'En attente'
     ];
+
+    // Méthode pour filtrer les finances par type
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 }

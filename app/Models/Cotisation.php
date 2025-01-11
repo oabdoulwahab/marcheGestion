@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cotisation extends Model
 {
     use HasFactory;
-    protected $fillable = ['montant_total', 'date_debut', 'date_fin'];
+    protected $fillable = ['name', 'montant_total', 'date_debut', 'date_fin'];
 
     // Relation many-to-many avec marchant
     public function marchants()

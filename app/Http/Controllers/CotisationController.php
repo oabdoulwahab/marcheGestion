@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Cotisation;
+use App\Models\Finance;
 use App\Models\Marchant;
+use App\Models\Cotisation;
+use Illuminate\Http\Request;
 
 class CotisationController extends Controller
 {
@@ -13,9 +14,13 @@ class CotisationController extends Controller
      */
     public function index()
     {
-        //
+        //// Récupérer toutes les cotisations
+    $cotisations = Cotisation::withCount('marchants')->latest()->get();
 
-        return view('pages.admin.cotisation.cotisation.show', compact('marchands'));
+    // Récupérer toutes les finances et marchands (si nécessaire)
+    $finances = Finance::all();
+    $marchands = Marchant::all();
+        return view('pages.admin.cotisation.cotisation.index', compact('marchands','cotisations'));
     }
 
     /**
@@ -34,6 +39,7 @@ class CotisationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'nullable|string|max:255',
             'montant_total' => 'required|numeric|min:0',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after:date_debut',
@@ -49,8 +55,13 @@ class CotisationController extends Controller
      */
     public function show($id)
     {
-        // Récupérer la cotisation avec ses marchants et leurs paiements
-        $cotisation = Cotisation::with(['marchants'])->findOrFail($id);
+        // Récupérer la cotisation avec ses adhérents paginés
+        $cotisation = Cotisation::with(['marchants' => function ($query) {
+            $query->orderBy('name'); // Trier par ordre alphabétique
+        }])->findOrFail($id);
+
+        // Paginer les adhérents (par exemple, 10 par page)
+        $marchants = $cotisation->marchants()->paginate(10);
 
         // Calculer les montants pour chaque marchand
         $cotisation->marchants->each(function ($marchant) use ($cotisation) {
@@ -88,6 +99,7 @@ class CotisationController extends Controller
     public function update(Request $request, Cotisation $cotisation)
     {
         $request->validate([
+            'name' => 'nullable|string|max:255',
             'montant_total' => 'required|numeric|min:0',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after:date_debut',
@@ -113,8 +125,7 @@ class CotisationController extends Controller
     {
         // Valider les données du formulaire
         $request->validate([
-            'adherents' => 'required|array', // Assurez-vous que des adhérents sont sélectionnés
-            'adherents.*' => 'exists:marchants,id', // Vérifiez que les adhérents existent dans la table marchants
+           'adherents' => 'required|exists:marchants,id', // Vérifiez que les adhérents existent dans la table marchants
         ]);
 
         // Récupérer la cotisation
@@ -137,4 +148,39 @@ class CotisationController extends Controller
         // Rediriger avec un message de succès
         return redirect()->back()->with('success', 'Adhérent retiré de la cotisation avec succès.');
     }
+
+    public function filterAdherentsByDate(Request $request, $cotisationId)
+{
+    $filter = $request->input('filter', 'all'); // Valeur par défaut : 'all'
+    $query = Cotisation::findOrFail($cotisationId)->marchants()->with('paiements');
+
+    switch ($filter) {
+        case 'year':
+            $query = $query->whereHas('paiements', function ($q) {
+                $q->whereYear('date_payment', now()->year);
+            });
+            break;
+        case 'month':
+            $query = $query->whereHas('paiements', function ($q) {
+                $q->whereYear('date_payment', now()->year)
+                  ->whereMonth('date_payment', now()->month);
+            });
+            break;
+        case 'week':
+            $query = $query->whereHas('paiements', function ($q) {
+                $q->whereBetween('date_payment', [now()->startOfWeek(), now()->endOfWeek()]);
+            });
+            break;
+        case 'day':
+            $query = $query->whereHas('paiements', function ($q) {
+                $q->whereDate('date_payment', now());
+            });
+            break;
+    }
+
+    $marchants = $query->get();
+
+    return response()->json($marchants);
+}
+
 }

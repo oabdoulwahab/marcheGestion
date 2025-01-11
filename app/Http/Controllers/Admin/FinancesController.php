@@ -12,14 +12,28 @@ class FinancesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-        $finances = Finance::all();
-        $marchands = Marchant::all();
-        $cotisations = Cotisation::withCount('marchants')->get();
-        return View('pages.admin.gesfin.index', compact('finances','marchands','cotisations'));
+    public function index(Request $request)
+{
+    // Récupérer les 3 dernières cotisations
+    $cotisations = Cotisation::withCount('marchants')
+        ->latest() // Trier par date de création décroissante
+        ->take(3) // Limiter à 3 résultats
+        ->get();
 
+    // Récupérer toutes les finances et marchands (si nécessaire)
+    $type = $request->query('type', 'all'); // Par défaut, affiche tout
+    $finances = Finance::when($type !== 'all', function ($query) use ($type) {
+        $query->where('type', $type);
+    })->get();
+    $marchands = Marchant::all();
+
+    return view('pages.admin.gesfin.index', compact('finances', 'marchands', 'cotisations','type'));
+}
+
+public function indexByType($type)
+    {
+        $finances = Finance::byType($type)->get();
+        return view('pages.admin.gesfin.index', compact('finances'));
     }
 
     // Afficher un formulaire pour créer une nouvelle dépense

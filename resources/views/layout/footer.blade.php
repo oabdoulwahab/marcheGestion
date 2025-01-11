@@ -34,7 +34,60 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <script>
-    // $(document).ready(function() {
-    //     $('#marchantTable').DataTable();
-    // });
+    function setActiveButton(activeButton) {
+        const buttons = document.querySelectorAll('.filter-button');
+        buttons.forEach(button => button.classList.remove('active'));
+        activeButton.classList.add('active');
+    }
+
+    function filterFinances(type, button) {
+        setActiveButton(button);
+
+        const tableRows = document.querySelectorAll('#marchantTable tbody tr');
+
+        tableRows.forEach(row => {
+            const rowType = row.querySelector('td:nth-child(3)').textContent.toLowerCase(); // 3ème colonne = Type
+            if (type === 'all' || rowType === type) {
+                row.style.display = ''; // Afficher la ligne
+            } else {
+                row.style.display = 'none'; // Masquer la ligne
+            }
+        });
+    }
+
+    function filterCotisationsByYear() {
+        const selectedYear = document.getElementById('yearFilter').value;
+        const cotisationItems = document.querySelectorAll('.cotisation-item');
+
+        cotisationItems.forEach(item => {
+            const itemYear = item.getAttribute('data-year');
+            if (selectedYear === 'all' || itemYear === selectedYear) {
+                item.style.display = 'block'; // Affiche les éléments correspondant
+            } else {
+                item.style.display = 'none'; // Masque les éléments non correspondants
+            }
+        });
+    }
+
+    
+        // Fonction pour filtrer les adhérents par statut de paiement
+        function filterAdherents(status) {
+            const rows = document.querySelectorAll('#marchantTable tbody tr');
+
+            rows.forEach(row => {
+                const paymentStatus = row.getAttribute('data-payment-status');
+                if (status === 'all' || paymentStatus === status) {
+                    row.style.display = ''; // Afficher la ligne
+                } else {
+                    row.style.display = 'none'; // Masquer la ligne
+                }
+            });
+
+            // Mettre à jour l'état actif des boutons de filtrage
+            document.querySelectorAll('.filter-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`button[onclick="filterAdherents('${status}')"]`).classList.add('active');
+        }
 </script>
+

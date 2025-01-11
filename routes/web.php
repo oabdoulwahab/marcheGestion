@@ -55,17 +55,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/marchant/{id}', [MerchantController::class, 'show'])->name('marchant.show');
 });
 
-Route::resource('cotisation', CotisationController::class);
-Route::post('/cotisations/{id}/add-adherents', [CotisationController::class, 'addAdherents'])
-    ->name('cotisation.addAdherents');
-Route::delete('/cotisations/{cotisation}/remove-adherent/{marchant}', [CotisationController::class, 'removeAdherent'])
-    ->name('cotisation.removeAdherent');
-Route::resource('paiement', PaiementController::class);
-// Route pour calculer le montant total à payer
-Route::get('/montant-total/{marchantId}/{cotisationId}', [PaiementController::class, 'montantTotalAPayer']);
-
 
 Route::middleware(['auth', 'role:agent,admin'])->group(function () {
+
+    Route::get('/finances/type/{type}', [FinancesController::class, 'indexByType'])->name('finance.type');
+    Route::resource('cotisation', CotisationController::class);
+    Route::post('/cotisations/{id}/add-adherents', [CotisationController::class, 'addAdherents'])
+        ->name('cotisation.addAdherents');
+    Route::delete('/cotisations/{cotisation}/remove-adherent/{marchant}', [CotisationController::class, 'removeAdherent'])
+        ->name('cotisation.removeAdherent');
+    Route::get('cotisation/{cotisationId}/filter', [CotisationController::class, 'filterAdherentsByDate'])->name('cotisation.filterAdherents');
+
+    Route::resource('paiement', PaiementController::class);
+    // Route pour calculer le montant total à payer
+    Route::get('/montant-total/{marchantId}/{cotisationId}', [PaiementController::class, 'montantTotalAPayer']);
 
 
     //routes pour les secteurs d'acivités 

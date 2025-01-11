@@ -16,8 +16,7 @@
             <div class="row mb-4">
                 <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <h3 class="font-weight-bold text-dark mb-3 mb-md-0">
-                        Liste des adhérents de la cotisation du - {{ \Carbon\Carbon::parse($cotisation->date_debut)->translatedFormat('d F Y') }} au
-                        {{ \Carbon\Carbon::parse($cotisation->date_fin)->translatedFormat('d F Y') }}
+                        {{ $cotisation->name }}
                     </h3>
                     <a href="{{ route('finance.index') }}" class="btn btn-danger">
                         <i class="feather icon-arrow-left mr-2"></i> Retour
@@ -29,6 +28,21 @@
             <div class="row mb-3">
                 <div class="col-12 col-md-6">
                     <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un adhérent...">
+                </div>
+            </div>
+
+            <!-- Boutons de filtrage par statut de paiement -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <button onclick="filterAdherents('all')" class="btn btn-outline-secondary filter-button active">
+                        Tous
+                    </button>
+                    <button onclick="filterAdherents('complete')" class="btn btn-outline-secondary filter-button">
+                        Paiement complet
+                    </button>
+                    <button onclick="filterAdherents('incomplete')" class="btn btn-outline-secondary filter-button">
+                        Paiement non complet
+                    </button>
                 </div>
             </div>
 
@@ -51,16 +65,14 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($cotisation->marchants as $marchant)
-                                            <tr>
+                                            <tr data-payment-status="{{ $marchant->montant_deja_paye >= $marchant->montant_total_a_payer ? 'complete' : 'incomplete' }}">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $marchant->name }}</td>
                                                 <td>{{ number_format($marchant->montant_total_a_payer) }} Fr CFA</td>
-                                                <td
-                                                    class="{{ $marchant->montant_deja_paye >= $marchant->montant_total_a_payer ? 'text-success' : '' }}">
+                                                <td class="{{ $marchant->montant_deja_paye >= $marchant->montant_total_a_payer ? 'text-success' : '' }}">
                                                     {{ number_format($marchant->montant_deja_paye) }} Fr CFA
                                                 </td>
-                                                <td
-                                                    class="{{ $marchant->montant_deja_paye >= $marchant->montant_total_a_payer ? 'text-danger' : '' }}">
+                                                <td class="{{ $marchant->montant_deja_paye >= $marchant->montant_total_a_payer ? 'text-danger' : '' }}">
                                                     {{ number_format($marchant->reste_a_payer) }} Fr CFA
                                                 </td>
                                                 <td>
@@ -68,9 +80,7 @@
                                                         <a href="{{ route('cotisation.marchant.show', ['cotisationId' => $cotisation->id, 'marchantId' => $marchant->id]) }}"
                                                             class="btn btn-primary btn-sm mr-2" title="Voir">
                                                             <i class="feather icon-eye"></i>
-                                                         </a>
-                                                        <!-- Bouton pour ouvrir le modal d'ajout de paiement -->
-
+                                                        </a>
                                                         @if ($marchant->montant_deja_paye < $marchant->montant_total_a_payer)
                                                             <a href="#" class="btn btn-success btn-sm mr-2"
                                                                 data-toggle="modal"
@@ -81,10 +91,9 @@
                                                         @else
                                                             <button class="btn btn-success btn-sm mr-2" disabled
                                                                 title="Paiement complet">
-                                                                <i class="feather icon-check"></i>complet
+                                                                <i class="feather icon-check"></i> Complet
                                                             </button>
                                                         @endif
-
                                                         @include('pages.admin.cotisation.cotisation.ajout')
                                                         <form
                                                             action="{{ route('cotisation.removeAdherent', ['cotisation' => $cotisation->id, 'marchant' => $marchant->id]) }}"
@@ -108,7 +117,6 @@
                                             </tr>
                                         @endforelse
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>
@@ -117,4 +125,6 @@
             </div>
         </div>
     </section>
+
+
 @endsection

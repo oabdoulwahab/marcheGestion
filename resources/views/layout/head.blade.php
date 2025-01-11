@@ -51,3 +51,30 @@
 <!-- Scripts -->
 <!-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) -->
 
+ <!-- Styles supplémentaires -->
+ <style>
+  .hover-scale {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-scale:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  .icon-background {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9f7ff;
+      border-radius: 50%;
+  }
+  .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+  }
+  @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+  }
+</style>
+

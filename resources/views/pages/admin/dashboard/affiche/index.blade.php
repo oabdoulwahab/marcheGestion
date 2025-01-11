@@ -14,7 +14,7 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <!-- Titre principal -->
-                    <h5 class="card-title mb-3 text-center fw-bold">Total financier </h5>
+                    <h5 class="card-title mb-3 text-center fw-bold">Bilan financier </h5>
 
                     <!-- Montant total -->
                     <h2 class="fw-bold text-center">

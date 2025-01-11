@@ -39,11 +39,11 @@
                     <div class="form-group">
                         <label for="role">Rôle</label>
                         <select name="role" id="role" class="form-control" required>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->role }}" {{ $personnel->role == $role->role ? 'selected' : '' }}>
-                                    {{ $role->role }}
+                             @foreach ($personnels as $personnel) 
+                                <option value="{{ $personnel->role }}" {{ $personnel->role == $personnel->role ? 'selected' : '' }}>
+                                    {{ $personnel->role }}
                                 </option>
-                            @endforeach
+                             @endforeach 
                         </select>
                         @error('role_id')
                             <small class="text-danger">{{ $message }}</small>

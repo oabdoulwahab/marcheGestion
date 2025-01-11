@@ -79,8 +79,8 @@
                             <div class="form-group">
                                 <label for="status">Rôle</label>
                                     <select class="form-control" name="role" id="status">
-                                @foreach ($roles as $role)
-                                <option value="{{$role->role}}">{{$role->role}}</option>
+                                @foreach ($personnels as $personnel)
+                                <option value="{{$personnel->role}}">{{$personnel->role}}</option>
                                 @endforeach
                                 </select>
                             </div>

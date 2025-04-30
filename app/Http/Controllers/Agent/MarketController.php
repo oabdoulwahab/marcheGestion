@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Http\Controllers\Controller;
 use App\Models\Espace;
 use App\Models\Secteur;
 use Illuminate\Http\Request;

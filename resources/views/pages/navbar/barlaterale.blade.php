@@ -4,13 +4,13 @@
 </li>
 @if (auth()->user()->role == 'admin')
 <li class="nav-item">
-    <a href="{{ route('index') }}" class="nav-link">
+    <a href="" class="nav-link">
         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
         <span class="pcoded-mtext">Tableau de bord</span>
     </a>
     </li> 
 <li class="nav-item">
-    <a href="{{route('personnel.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Gestion du personnel</span></a>
+    <a href="{{route('admin.personnel.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Gestion du personnel</span></a>
 </li>
 @endif
 <li class="nav-item">
@@ -21,6 +21,6 @@
     
 @if (auth()->user()->role == 'admin')
 <li class="nav-item">
-    <a href="{{route('finance.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-credit-card"></i></span><span class="pcoded-mtext">Gestion des finances</span></a>
+    <a href="{{route('admin.finance.index')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-credit-card"></i></span><span class="pcoded-mtext">Gestion des finances</span></a>
 </li>
 @endif

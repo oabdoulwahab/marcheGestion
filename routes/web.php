@@ -3,93 +3,54 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PaiementController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CotisationController;
-use App\Http\Controllers\Admin\ChartController;
-use App\Http\Controllers\Admin\EspaceController;
-use App\Http\Controllers\Agent\MarketController;
-use App\Http\Controllers\Agent\ContratController;
-use App\Http\Controllers\Agent\SecteurController;
-use App\Http\Controllers\Admin\FinancesController;
-use App\Http\Controllers\Agent\MerchantController;
-use App\Http\Controllers\Admin\PersonnelController;
-use App\Http\Controllers\Admin\SecteurController as AdminSecteurController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\ChartController;
+use App\Http\Controllers\Admin\{
+    MarketController,
+    ContratController,
+    SecteurController,
+    FinancesController,
+    PersonnelController,
+    DashboardController,
+    MerchantController,
+    EspaceController
+};
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-Route::get('/bord', [DashboardController::class, 'index']);
-Route::get('/chart', [ChartController::class, 'index']);
 Auth::routes();
-Route::middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::resource('/', AdminDashboardController::class);
+// Public routes
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 
+// Routes protégées par authentication
+Route::middleware(['auth'])->group(function () {
+    
+    // Routes communes aux agents et admins
+    Route::middleware(['role:agent,admin'])->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        
+        Route::resources([
+            'secteur' => SecteurController::class,
+            'contrat' => ContratController::class,
+            'market' => MarketController::class,
+            'marchant' => MerchantController::class,
+            'espace' => EspaceController::class,
+        ]);
 
-    //routes pour la gestion de Personnels
-    Route::resource('personnel', PersonnelController::class);
+        // Export routes
+        Route::prefix('contrat')->name('contrat.export.')->group(function () {
+            Route::get('{id}/export-pdf', [ContratController::class, 'exportPDF'])->name('pdf');
+            Route::get('{id}/export-excel', [ContratController::class, 'exportExcel'])->name('excel');
+        });
+    });
 
-    //routes pour les secteurs d'acivités 
-    Route::resource('secteur', AdminSecteurController::class);
-
-    Route::get('/contrats/{id}', [ContratController::class, 'details'])->name('contrats.details');
-    Route::resource('contrat', ContratController::class);
-    Route::get('/contrat/{id}/export-pdf', [ContratController::class, 'exportPDF'])->name('contrat.export.pdf');
-    Route::get('/contrat/{id}/export-excel', [ContratController::class, 'exportExcel'])->name('contrat.export.excel');
-
-    Route::get('/espaces/{id}', [EspaceController::class, 'details'])->name('espaces.details');
-    Route::resource('market', MarketController::class);
-    Route::resource('espace', EspaceController::class);
-    Route::resource('marchant', MerchantController::class);
-
-    Route::get('/marchant/{id}', [MerchantController::class, 'show'])->name('marchant.show');
+    // Routes réservées aux admins
+    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::resources([
+            'personnel' => PersonnelController::class,
+            'finance' => FinancesController::class,
+        ]);
+        
+        Route::put('finance/{id}/{status}', [FinancesController::class, 'updateStatus'])
+            ->name('finance.updateStatus');
+    });
 });
-
-
-Route::middleware(['auth', 'role:agent,admin'])->group(function () {
-
-    Route::get('/finances/type/{type}', [FinancesController::class, 'indexByType'])->name('finance.type');
-    Route::resource('cotisation', CotisationController::class);
-    Route::post('/cotisations/{id}/add-adherents', [CotisationController::class, 'addAdherents'])
-        ->name('cotisation.addAdherents');
-    Route::delete('/cotisations/{cotisation}/remove-adherent/{marchant}', [CotisationController::class, 'removeAdherent'])
-        ->name('cotisation.removeAdherent');
-    Route::get('cotisation/{cotisationId}/filter', [CotisationController::class, 'filterAdherentsByDate'])->name('cotisation.filterAdherents');
-
-    Route::resource('paiement', PaiementController::class);
-    // Route pour calculer le montant total à payer
-    Route::get('/montant-total/{marchantId}/{cotisationId}', [PaiementController::class, 'montantTotalAPayer']);
-
-
-    //routes pour les secteurs d'acivités 
-    Route::resource('/secteur', SecteurController::class);
-
-
-    Route::resource('contrat', ContratController::class);
-
-    Route::resource('market', MarketController::class);
-    // Route pour afficher les détails d'un adhérent dans une cotisation
-    Route::get('/cotisations/{cotisationId}/marchants/{marchantId}', [MerchantController::class, 'showAdherent'])
-        ->name('cotisation.marchant.show');
-    //routes pour la gestion de finances
-    Route::resource('finance', FinancesController::class);
-    Route::put('/finance/{id}/{status}', [FinancesController::class, 'updateStatus'])->name('finance.updateStatus');
-
-    //   });
-    // });
-
-
-});
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

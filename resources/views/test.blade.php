@@ -25,5 +25,19 @@
 </head>
 <body>
     <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+    <h1>Secteur : {{ $secteur->name }}</h1>
+<p>Description : {{ $secteur->description }}</p>
+
+<h2>Commerçants</h2>
+<ul>
+    @foreach ($secteur->marchants as $marchant)
+        <li>
+            Nom : {{ $marchant->name }} - 
+            Numéro d'espace : {{ $marchant->espace->numero_space ?? 'Non attribué' }}
+        </li>
+    @endforeach
+</ul>
+
 </body>
 </html>

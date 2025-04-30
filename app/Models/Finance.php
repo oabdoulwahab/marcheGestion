@@ -17,7 +17,13 @@ class Finance extends Model
     ];
 
     protected $attributes = [
-        'type' => 'dépense',
+        'type' => 'vente',
         'status' => 'En attente'
     ];
+
+    // Méthode pour filtrer les finances par type
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 }

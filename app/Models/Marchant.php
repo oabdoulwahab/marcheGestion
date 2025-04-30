@@ -13,24 +13,46 @@ class Marchant extends Model
         'address',
         'phone',
         'secteur_id',
-        'contrat_id',
+        'espace_id',
+        'date_inscription',
     ];
 
+    // Relation many-to-many avec Cotisation
+    public function cotisations()
+    {
+        return $this->belongsToMany(Cotisation::class, 'cotisation_marchant')->withTimestamps();
+    }
+
+    // Relation one-to-many avec Paiement
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
     // Relation avec Sector
     public function secteur()
     {
         return $this->belongsTo(Secteur::class);
     }
 
-    // Relation avec Contract
-    public function contracts()
+    // Relation avec Espace
+    public function espace()
     {
-        return $this->hasMany(Contrat::class);
+        return $this->belongsTo(Espace::class);
     }
 
-    // Relation avec Payment
-    public function payments()
+    public function montantTotalAPayer($cotisationId)
     {
-        return $this->hasMany(Payment::class);
+        $cotisation = $this->cotisations()->find($cotisationId);
+        return $cotisation ? $cotisation->montant_total : 0;
+    }
+
+    public function montantDejaPaye($cotisationId)
+    {
+        return $this->paiements()->where('cotisation_id', $cotisationId)->sum('montant');
+    }
+
+    public function resteAPayer($cotisationId)
+    {
+        return $this->montantTotalAPayer($cotisationId) - $this->montantDejaPaye($cotisationId);
     }
 }

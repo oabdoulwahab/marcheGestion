@@ -36,11 +36,11 @@ class LoginController extends Controller
         }
 
         if ($user->role === 'agent') {
-            return '/'; 
+            return '/market'; 
         }
 
         if ($user->role === 'manager') {
-            return '/'; 
+            return '/market'; 
         }
 
         return '/login'; // Par défaut pour les autres utilisateurs

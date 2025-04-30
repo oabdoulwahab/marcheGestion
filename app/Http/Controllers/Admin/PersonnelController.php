@@ -17,8 +17,8 @@ class PersonnelController extends Controller
     {
         //
         $personnels = User::all();
-        $roles = User::select('role')->distinct()->get();
-        return View('pages.admin.personnel.index',compact('personnels','roles'));
+        // $roles = User::select('role')->distinct()->get();
+        return View('pages.admin.personnel.index',compact('personnels'));
     }
 
     /**
@@ -70,8 +70,8 @@ class PersonnelController extends Controller
     {
         //
         $personnel = User::findOrFail($id);
-        $roles = User::select('role')->distinct()->get();
-        return view('pages.admin.personnel.edit',compact('personnel','roles'));
+        $personnels = User::all();
+        return view('pages.admin.personnel.edit',compact('personnel','personnels'));
     }
 
     /**

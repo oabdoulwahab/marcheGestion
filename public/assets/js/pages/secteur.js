@@ -1,28 +1,24 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const sectorContainer = document.getElementById('sectors');
+function setActiveButton(activeButton) {
+    const buttons = document.querySelectorAll('.filter-button');
+    buttons.forEach(button => button.classList.remove('active'));
+    activeButton.classList.add('active');
+}
+
+function filterFinances(type, button) {
+    setActiveButton(button);
+    // Reste du code de filtrage...
     
-    // Vérifiez si l'attribut data-sectors existe
-    if (!sectorContainer.dataset.sectors) {
-        console.error("Aucun secteur trouvé dans 'data-sectors'.");
-        return;
+        const financeContainer = document.getElementById('finance-container');
+        const financeCards = financeContainer.getElementsByClassName('col-lg-4');
+
+        for (let card of financeCards) {
+            const cardType = card.getAttribute('data-type');
+
+            if (type === 'all' || cardType === type) {
+                card.style.display = 'block'; // Afficher la carte
+            } else {
+                card.style.display = 'none'; // Masquer la carte
+            }
+        
     }
-
-    // Récupérer les données JSON des secteurs
-    const sectors = JSON.parse(sectorContainer.dataset.sectors);
-
-    // Afficher les cartes des secteurs
-    sectors.forEach(secteur => {
-        const secteurCard = `
-            <div class="col-md-4 mb-4">
-                <div class="border p-3 rounded-lg d-flex align-items-center">
-                    <div class="mr-3"><i class="fas fa-building text-muted"></i></div>
-                    <div>
-                        <p class="font-weight-bold text-dark mb-0">${secteur.name}</p>
-                        <p class="text-muted small">${secteur.marchants_count} marchands</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        sectorContainer.innerHTML += secteurCard;
-    });
-});
+}

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); 
             $table->text('description')->nullable(); 
-            $table->enum('type', ['dépense', 'revenu']); 
+            $table->enum('type', ['vente', 'achat']); 
             $table->decimal('amount', 15, 2); 
             $table->enum('status', ['En attente', 'Complété', 'Annulé']);
             $table->timestamps(); 

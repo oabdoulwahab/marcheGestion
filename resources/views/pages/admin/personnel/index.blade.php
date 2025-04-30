@@ -32,9 +32,9 @@
                                             <td>{{ $personnel->role }}</td>
                                             <td>{{ $personnel->contact }}</td>
                                             <td>
-                                                <a href="{{ route('personnel.edit', $personnel->id) }}" class="btn btn-success" title="Modifier"><i
+                                                <a href="{{ route('admin.personnel.edit', $personnel->id) }}" class="btn btn-success" title="Modifier"><i
                                                         class="feather icon-edit"></i></a>
-                                                <form action="{{ route('personnel.destroy', $personnel->id) }}"
+                                                <form action="{{ route('admin.personnel.destroy', $personnel->id) }}"
                                                     method="post" style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -69,7 +69,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('personnel.store') }}">
+                        <form method="POST" action="{{ route('admin.personnel.store') }}">
                             @csrf
                             <div class="form-group">
                                 <label for="lastName">Nom</label>
@@ -79,8 +79,8 @@
                             <div class="form-group">
                                 <label for="status">Rôle</label>
                                     <select class="form-control" name="role" id="status">
-                                @foreach ($roles as $role)
-                                <option value="{{$role->role}}">{{$role->role}}</option>
+                                @foreach ($personnels as $personnel)
+                                <option value="{{$personnel->role}}">{{$personnel->role}}</option>
                                 @endforeach
                                 </select>
                             </div>

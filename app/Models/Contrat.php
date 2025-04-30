@@ -33,19 +33,17 @@ class Contrat extends Model
 
 
     // Détermine et met à jour le statut du contrat
-    public function updateStatus()
+    public function getStatusAttribute()
     {
         $currentDate = Carbon::now();
 
         if ($currentDate->lt($this->date_debut)) {
-            $this->status = 'en attente';
+            return 'en attente';
         } elseif ($currentDate->between($this->date_debut, $this->date_fin)) {
-            $this->status = 'actif';
+            return 'actif';
         } elseif ($currentDate->gt($this->date_fin)) {
-            $this->status = 'expiré';
+            return 'expiré';
         }
-
-        $this->save();
     }
 
 }

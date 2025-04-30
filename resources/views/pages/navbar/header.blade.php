@@ -42,24 +42,14 @@
                 </div>
             </div>
         </li>
-        <li>
-            <a class="dropdown-item" href="{{ route('logout') }}"
-               onclick="event.preventDefault();
-                         document.getElementById('logout-form').submit(); ">
-                <i class="feather icon-log-out"></i> Logout
-            </a>
-        </li>
-   
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-        @csrf
-    </form>
+      
 </li>
     </ul>
 
     <!-- User Authentication -->
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
-            @guest
+            {{-- @guest
                 @if (Route::has('login'))
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -115,7 +105,18 @@
                         @csrf
                     </form>
                 </li>
-            @endguest
+            @endguest --}}
+            <li>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                   onclick="event.preventDefault();
+                             document.getElementById('logout-form').submit(); ">
+                    <i class="feather icon-log-out"></i> Déconnexion
+                </a>
+            </li>
+       
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
         </ul>
     </div>
     

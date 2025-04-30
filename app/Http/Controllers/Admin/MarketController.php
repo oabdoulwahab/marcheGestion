@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Espace;
 use App\Models\Secteur;
 use Illuminate\Http\Request;
 
@@ -16,18 +17,41 @@ class MarketController extends Controller
         $secteurs = Secteur::all();
 
         // Calculer le nombre total de secteurs
-        $totalSecteurs = $secteurs->count();
-    
-        // Préparer les données avec les pourcentages
-        $dataSecteurs = $secteurs->map(function ($secteur) use ($totalSecteurs) {
+        $totalMarchants = $secteurs->sum(function ($secteur) {
+            return $secteur->marchants()->count();
+        });
+
+        $dataSecteurs = $secteurs->map(function ($secteur) use ($totalMarchants) {
             return [
                 'name' => $secteur->name,
-                'count' => $secteur->marchants()->count(), // Exemple : le nombre de marchands par secteur
-                'percentage' => $totalSecteurs > 0 ? round(($secteur->marchants()->count() / $totalSecteurs) * 100, 2) : 0,
+                'count' => $secteur->marchants()->count(),
+                'rawPercentage' => $totalMarchants > 0 ? ($secteur->marchants()->count() / $totalMarchants) * 100 : 0,
             ];
         });
+
+        // Ajustement final pour éviter les dépassements
+        $totalPercentage = 0;
+        $dataSecteurs = $dataSecteurs->map(function ($secteur, $index) use (&$totalPercentage, $dataSecteurs) {
+            // Arrondi du pourcentage
+            $lastElement = $index === $dataSecteurs->count() - 1;
+            $roundedPercentage = round($secteur['rawPercentage'], 2);
+
+            // Ajuster le dernier pourcentage pour garantir 100%
+            if ($lastElement) {
+                $roundedPercentage = 100 - $totalPercentage;
+            }
+
+            $totalPercentage += $roundedPercentage;
+
+            return [
+                'name' => $secteur['name'],
+                'count' => $secteur['count'],
+                'percentage' => $roundedPercentage,
+            ];
+        });
+        $espaces = Espace::all();
         $secteurs = Secteur::withCount('marchants')->get();
-        return View('pages.admin.market.dashboard.index',compact('secteurs','totalSecteurs','dataSecteurs'));
+        return View('pages.admin.market.dashboard.index', compact('secteurs','espaces', 'totalMarchants', 'dataSecteurs'));
     }
 
     /**

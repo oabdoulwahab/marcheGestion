@@ -1,402 +1,131 @@
-<div class="grey-bg container-fluid">
+<div class="container-fluid grey-bg">
     <section id="minimal-statistics">
-      <div class="row">
-        <div class="col-12 mt-3 mb-1">
-          <h4 class="text-uppercase">Resumé des activités</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card">
-              <div class="card-content">
-                <div class="card-body">
-                  <div class="media d-flex">
-                    <div class="align-self-center">
-                      <i class="icon-docs primary font-large-2 float-left"></i>
-                    </div>
-                    <div class="media-body text-right">
-                      <h3>{{ $totalContrats }}</h3>
-                      <span>Total Contrats</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div class="row">
+            <div class="col-12 mt-3 mb-4 text-center">
+                <h4 class="text-uppercase">Résumé des Activités</h4>
             </div>
-          </div>
-          <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="media d-flex">
-                            <div class="align-self-center">
-                                <i class="icon-home primary font-large-2 float-left"></i>
-                            </div>
-                            <div class="media-body text-right">
-                                <h3>{{ $espacesAttribues }}</h3>
-                                <span>Espaces Attribués</span>
+        </div>
+
+        <!-- Première ligne de cartes -->
+        <div class="row g-4">
+            <!-- Card 1 : Total Contrats -->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="icon-docs primary me-3 font-large-2"></i>
+                        <div class="text-end flex-grow-1">
+                            <h3>{{ $totalContrats }}</h3>
+                            <span>Total Contrats</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" 
+                                 role="progressbar" 
+                                 style="width: {{ $contrat['percentage'] }}%;" 
+                                 aria-valuenow="{{ $contrat['percentage'] }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="media d-flex">
-                            <div class="align-self-center">
-                                <i class="icon-users primary font-large-2 float-left"></i>
+
+            <!-- Card 2 : Marchands par Secteur -->
+            @foreach ($secteurs as $secteur)
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <i class="icon-home primary me-3 font-large-2"></i>
+                            <div class="text-end flex-grow-1">
+                                <h3>{{ $secteur->marchants_count }}</h3>
+                                <span>Marchands de {{$secteur->name}}</span>
                             </div>
-                            <div class="media-body text-right">
-                                <h3>{{ $nombreMarchants }}</h3>
-                                <span>Marchants</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 8px;">
+                            <div class="progress-bar bg-primary" 
+                                 role="progressbar" 
+                                 style="width: {{ $secteurpercent['percentage'] }}%;" 
+                                 aria-valuenow="{{ $secteurpercent['percentage'] }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Deuxième ligne de cartes -->
+        <div class="row g-4 mt-4">
+            <!-- Card 3 : Nombre de Marchants -->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="icon-users primary me-3 font-large-2"></i>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-end">
+                                    <h3>{{ $nombreMarchants }}</h3>
+                                    <span>Marchands</span>
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 8px;">
+                                <div class="progress-bar bg-primary" 
+                                     role="progressbar" 
+                                     style="width: {{ $Marchant['percentage'] }}%;" 
+                                     aria-valuenow="{{ $Marchant['percentage'] }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Card 4 : Nouveaux Posts -->
+            {{-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="icon-pencil primary me-3 font-large-2"></i>
+                        <div class="text-end flex-grow-1">
+                            <h3>278</h3>
+                            <span>Nouveaux Posts</span>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
         </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="media d-flex">
-                            <div class="align-self-center">
-                                <i class="icon-grid success font-large-2 float-left"></i>
-                            </div>
-                            <div class="media-body text-right">
-                                <canvas id="secteurChart" width="400" height="200"></canvas>
-                                <h3>{{ $totalSecteurs }}</h3>
-                                <span>Secteurs</span>
-                            </div>
+
+        <!-- Troisième ligne de cartes (exemple supplémentaire) -->
+        {{-- <div class="row g-4 mt-4">
+            <!-- Card 5 : Nouveaux Commentaires -->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="icon-speech warning me-3 font-large-2"></i>
+                        <div class="text-end flex-grow-1">
+                            <h3>156</h3>
+                            <span>Nouveaux Commentaires</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-xl-3 col-sm-6 col-12"> 
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="align-self-center">
-                    <i class="icon-pencil primary font-large-2 float-left"></i>
-                  </div>
-                  <div class="media-body text-right">
-                    <h3>278</h3>
-                    <span>New Posts</span>
-                  </div>
+
+            <!-- Card 6 : Taux de Rebonds -->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="icon-graph success me-3 font-large-2"></i>
+                        <div class="text-end flex-grow-1">
+                            <h3>64.89%</h3>
+                            <span>Taux de Rebonds</span>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="align-self-center">
-                    <i class="icon-speech warning font-large-2 float-left"></i>
-                  </div>
-                  <div class="media-body text-right">
-                    <h3>156</h3>
-                    <span>New Comments</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="align-self-center">
-                    <i class="icon-graph success font-large-2 float-left"></i>
-                  </div>
-                  <div class="media-body text-right">
-                    <h3>64.89 %</h3>
-                    <span>Bounce Rate</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="align-self-center">
-                    <i class="icon-pointer danger font-large-2 float-left"></i>
-                  </div>
-                  <div class="media-body text-right">
-                    <h3>423</h3>
-                    <span>Total Visits</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="danger">278</h3>
-                    <span>New Projects</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-rocket danger font-large-2 float-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="success">156</h3>
-                    <span>New Clients</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-user success font-large-2 float-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="warning">64.89 %</h3>
-                    <span>Conversion Rate</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-pie-chart warning font-large-2 float-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="primary">423</h3>
-                    <span>Support Tickets</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-support primary font-large-2 float-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="primary">278</h3>
-                    <span>New Posts</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-book-open primary font-large-2 float-right"></i>
-                  </div>
-                </div>
-                <div class="progress mt-1 mb-0" style="height: 7px;">
-                  <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="warning">156</h3>
-                    <span>New Comments</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-bubbles warning font-large-2 float-right"></i>
-                  </div>
-                </div>
-                <div class="progress mt-1 mb-0" style="height: 7px;">
-                  <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="success">64.89 %</h3>
-                    <span>Bounce Rate</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-cup success font-large-2 float-right"></i>
-                  </div>
-                </div>
-                <div class="progress mt-1 mb-0" style="height: 7px;">
-                  <div class="progress-bar bg-success" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-          <div class="card">
-            <div class="card-content">
-              <div class="card-body">
-                <div class="media d-flex">
-                  <div class="media-body text-left">
-                    <h3 class="danger">423</h3>
-                    <span>Total Visits</span>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="icon-direction danger font-large-2 float-right"></i>
-                  </div>
-                </div>
-                <div class="progress mt-1 mb-0" style="height: 7px;">
-                  <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </div> --}}
     </section>
-    
-    <section id="stats-subtitle">
-    <div class="row">
-      <div class="col-12 mt-3 mb-1">
-        <h4 class="text-uppercase">Statistics With Subtitle</h4>
-        <p>Statistics on minimal cards with Title &amp; Sub Title.</p>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-xl-6 col-md-12">
-        <div class="card overflow-hidden">
-          <div class="card-content">
-            <div class="card-body cleartfix">
-              <div class="media align-items-stretch">
-                <div class="align-self-center">
-                  <i class="icon-pencil primary font-large-2 mr-2"></i>
-                </div>
-                <div class="media-body">
-                  <h4>Total Posts</h4>
-                  <span>Monthly blog posts</span>
-                </div>
-                <div class="align-self-center">
-                  <h1>18,000</h1>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-xl-6 col-md-12">
-        <div class="card">
-          <div class="card-content">
-            <div class="card-body cleartfix">
-              <div class="media align-items-stretch">
-                <div class="align-self-center">
-                  <i class="icon-speech warning font-large-2 mr-2"></i>
-                </div>
-                <div class="media-body">
-                  <h4>Total Comments</h4>
-                  <span>Monthly blog comments</span>
-                </div>
-                <div class="align-self-center"> 
-                  <h1>84,695</h1>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="row">
-      <div class="col-xl-6 col-md-12">
-        <div class="card">
-          <div class="card-content">
-            <div class="card-body cleartfix">
-              <div class="media align-items-stretch">
-                <div class="align-self-center">
-                  <h1 class="mr-2">$76,456.00</h1>
-                </div>
-                <div class="media-body">
-                  <h4>Total Sales</h4>
-                  <span>Monthly Sales Amount</span>
-                </div>
-                <div class="align-self-center">
-                  <i class="icon-heart danger font-large-2"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-xl-6 col-md-12">
-        <div class="card">
-          <div class="card-content">
-            <div class="card-body cleartfix">
-              <div class="media align-items-stretch">
-                <div class="align-self-center">
-                  <h1 class="mr-2">$36,000.00</h1>
-                </div>
-                <div class="media-body">
-                  <h4>Total Cost</h4>
-                  <span>Monthly Cost</span>
-                </div>
-                <div class="align-self-center">
-                  <i class="icon-wallet success font-large-2"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  </div>
+</div>

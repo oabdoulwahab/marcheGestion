@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\{
     MerchantController,
     EspaceController
 };
+use App\Http\Controllers\Admin\ContratController as AdminContratController;
+use App\Http\Controllers\Agent\AgentContratController;
 
 Auth::routes();
 
@@ -30,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
         
         Route::resources([
             'secteur' => SecteurController::class,
-            'contrat' => ContratController::class,
+            'contrat' => AdminContratController::class,
             'market' => MarketController::class,
             'marchant' => MerchantController::class,
             'espace' => EspaceController::class,

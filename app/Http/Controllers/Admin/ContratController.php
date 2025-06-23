@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Agent;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Contrat;
 use App\Models\Secteur;
 use App\Models\Marchant;

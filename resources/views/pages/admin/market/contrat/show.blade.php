@@ -46,6 +46,7 @@
     
             <!-- Date -->
             <div class="text-end mt-5">
+                
                 <p><strong>Fait le :</strong> …………/…………/2024</p>
             </div>
     

@@ -1,4 +1,4 @@
-# Utiliser PHP 8.2
+# Utiliser PHP 8.2 (compatible avec vos dépendances)
 FROM php:8.2-fpm-alpine
 
 # Installer des outils nécessaires
@@ -11,10 +11,14 @@ RUN apk add --no-cache \
     oniguruma-dev \
     freetype-dev \
     libjpeg-turbo-dev \
-    libpng-dev
+    libpng-dev \
+    libzip-dev  
 
 # Installer les extensions PHP nécessaires
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
+
+# Activer l'extension zip
+RUN docker-php-ext-enable zip
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

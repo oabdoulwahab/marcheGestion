@@ -1,0 +1,3 @@
+[deploy]
+image = "Dockerfile"
+postStart = "php artisan migrate --force && php artisan db:seed --force"

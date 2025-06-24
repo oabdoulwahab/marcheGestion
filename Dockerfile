@@ -36,6 +36,11 @@ COPY . .
 # Installer les dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
+# Installer les dépendances NPM et compiler les assets
+RUN if [ -f package.json ]; then npm install; fi
+RUN if [ -f package.json ]; then npm run dev; fi
+
+
 # Générer la clé d'application Laravel
 RUN cp .env.example .env || true
 RUN php artisan key:generate || true

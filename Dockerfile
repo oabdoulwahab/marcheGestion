@@ -1,19 +1,21 @@
 # Utiliser PHP 8.2 (compatible avec tes dépendances)
 FROM php:8.2-fpm-alpine
 
-# Installer des outils nécessaires + oniguruma-dev (pour mbstring)
+# Installer des outils nécessaires + nodejs + npm
 RUN apk add --no-cache \
     bash \
     git \
     curl \
     zip \
     unzip \
-    oniguruma-dev\
+    oniguruma-dev \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
     libzip-dev \
-    g++                      # nécessaire pour certaines extensions ou npm
+    g++ \
+    nodejs \
+    npm
 
 # Installer les extensions PHP nécessaires
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
@@ -22,7 +24,7 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
 RUN docker-php-ext-configure gd --with-jpeg && \
     docker-php-ext-install -j$(nproc) gd
 
-# Activer l'extension zip (facultatif si déjà installée)
+# Activer l'extension zip si nécessaire
 RUN docker-php-ext-enable zip
 
 # Installer Composer
@@ -37,10 +39,9 @@ COPY . .
 # Installer les dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
-# Installer les dépendances NPM et compiler les assets (si tu utilises Laravel Mix/Vite)
-# Si tu n'utilises pas le frontend (ex: API-only), tu peux supprimer ces lignes
+# Installer les dépendances NPM et compiler les assets
 RUN if [ -f package.json ]; then npm install; fi
-RUN if [ -f package.json ]; then npm run dev; fi
+RUN if [ -f package.json ]; then npm run build; fi
 
 # Générer la clé d'application Laravel
 RUN cp .env.example .env || true

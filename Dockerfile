@@ -1,5 +1,5 @@
-# Utiliser une image officielle PHP avec FPM et Alpine Linux
-FROM php:8.1-fpm-alpine
+# Utiliser PHP 8.2
+FROM php:8.2-fpm-alpine
 
 # Installer des outils nécessaires
 RUN apk add --no-cache \
@@ -7,28 +7,30 @@ RUN apk add --no-cache \
     git \
     curl \
     zip \
-    unzip\
-    oniguruma-dev 
+    unzip \
+    oniguruma-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev
 
-
-# Installer les extensions PHP nécessaires pour Laravel
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath
+# Installer les extensions PHP nécessaires
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
 # Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Répertoire de travail dans le conteneur
+# Répertoire de travail
 WORKDIR /var/www/html
 
-# Copier tous les fichiers du projet dans le conteneur
+# Copier tous les fichiers du projet
 COPY . .
 
 # Installer les dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
-# Générer la clé d'application si nécessaire
+# Générer la clé d'application Laravel
 RUN cp .env.example .env || true
 RUN php artisan key:generate || true
 
-# Lancer l'artisan serve (serveur Laravel simple)
+# Démarrer l'application Laravel
 CMD ["php", "artisan", "serve", "--host=0.0.0.0"]

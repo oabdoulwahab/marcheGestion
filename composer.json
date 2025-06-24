@@ -16,6 +16,9 @@
         "mcamara/laravel-localization": "*",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.10",
+        "symfony/css-selector": "^6.0",
+        "symfony/event-dispatcher": "^6.0",
+        "symfony/string": "^6.0",
         "yoeunes/toastr": "^2.3"
     },
     "require-dev": {

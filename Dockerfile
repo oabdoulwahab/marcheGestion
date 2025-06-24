@@ -7,7 +7,9 @@ RUN apk add --no-cache \
     git \
     curl \
     zip \
-    unzip
+    unzip\
+    oniguruma-dev 
+
 
 # Installer les extensions PHP nécessaires pour Laravel
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath

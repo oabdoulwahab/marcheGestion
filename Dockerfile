@@ -1,4 +1,4 @@
-# Utiliser PHP 8.2 (compatible avec vos dépendances)
+# Utiliser PHP 8.2 (compatible avec tes dépendances)
 FROM php:8.2-fpm-alpine
 
 # Installer des outils nécessaires
@@ -12,12 +12,16 @@ RUN apk add --no-cache \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
-    libzip-dev  
+    libzip-dev
 
 # Installer les extensions PHP nécessaires
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
 
-# Activer l'extension zip
+# Installer l'extension GD
+RUN docker-php-ext-configure gd --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd
+
+# Activer l'extension zip (si nécessaire)
 RUN docker-php-ext-enable zip
 
 # Installer Composer

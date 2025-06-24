@@ -8,7 +8,7 @@ RUN apk add --no-cache \
     curl \
     zip \
     unzip \
-    oniguruma-dev \        # requis pour mbstring
+    oniguruma-dev\
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \

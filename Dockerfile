@@ -1,7 +1,7 @@
-# Utiliser PHP 8.2 (compatible avec tes dépendances)
-FROM php:8.2-fpm-alpine
+# Utiliser PHP 8.2 + Alpine 3.18
+FROM php:8.2-fpm-alpine3.18
 
-# Installer des outils nécessaires + nodejs + npm
+# Installer des outils nécessaires + oniguruma-dev (pour mbstring)
 RUN apk add --no-cache \
     bash \
     git \
@@ -20,30 +20,27 @@ RUN apk add --no-cache \
 # Installer les extensions PHP nécessaires
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath zip
 
-# Installer l'extension GD
+# Installer l'extension GD si nécessaire
 RUN docker-php-ext-configure gd --with-jpeg && \
     docker-php-ext-install -j$(nproc) gd
 
-# Activer l'extension zip si nécessaire
-RUN docker-php-ext-enable zip
-
 # Installer Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Répertoire de travail
 WORKDIR /var/www/html
 
-# Copier tous les fichiers du projet
+# Copier les fichiers du projet
 COPY . .
 
 # Installer les dépendances PHP
 RUN composer install --optimize-autoloader --no-dev
 
-# Installer les dépendances NPM et compiler les assets
+# Installer les dépendances NPM et compiler les assets (si tu utilises Vite)
 RUN if [ -f package.json ]; then npm install; fi
 RUN if [ -f package.json ]; then npm run build; fi
 
-# Générer la clé d'application Laravel
+# Générer APP_KEY si besoin
 RUN cp .env.example .env || true
 RUN php artisan key:generate --force || true
 

@@ -43,6 +43,8 @@ RUN if [ -f package.json ]; then npm run build; fi
 # Générer APP_KEY si besoin
 RUN cp .env.example .env || true
 RUN php artisan key:generate --force || true
+RUN php artisan migrate --force || true
+RUN php artisan db:seed --force || true
 
 # Démarrer l'application Laravel
 CMD ["php", "artisan", "serve", "--host=0.0.0.0"]

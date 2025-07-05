@@ -1,3 +1,0 @@
-[deploy]
-image = "Dockerfile"
-postStart = "chmod +x wait-for-db.sh && ./wait-for-db.sh"

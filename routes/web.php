@@ -19,6 +19,16 @@ use App\Http\Controllers\Agent\AgentContratController;
 
 Auth::routes();
 
+Route::get('/setup', function () {
+    // Exécute les migrations
+    Artisan::call('migrate', ['--force' => true]);
+
+    // Exécute les seeders
+    Artisan::call('db:seed', ['--force' => true]);
+
+    return 'Migrations et seeders exécutés avec succès !';
+});
+
 // Public routes
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/chart', [ChartController::class, 'index'])->name('chart');

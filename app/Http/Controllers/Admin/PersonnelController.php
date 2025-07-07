@@ -51,7 +51,7 @@ class PersonnelController extends Controller
     ]);
     $personnel->save();
 
-    return redirect()->route('personnel.index')->with('success', 'Utilisateur enregistré avec succès.');
+    return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur enregistré avec succès.');
 }
 
 
@@ -97,7 +97,7 @@ class PersonnelController extends Controller
                 'password' => $request->filled('password') ? Hash::make($request->input('password')) : $user->password,
             ]);
     
-            return redirect()->route('personnel.index')->with('success', 'Utilisateur mis à jour avec succès.');
+            return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur mis à jour avec succès.');
         
     }
 
@@ -107,7 +107,7 @@ class PersonnelController extends Controller
     public function destroy(string $id)
     {
           
-    $personnel = Personnel::findOrFail($id); // Récupère l'enregistrement ou lance une exception si introuvable
+    $personnel = User::findOrFail($id); // Récupère l'enregistrement ou lance une exception si introuvable
     
     $personnel->delete(); // Supprime l'enregistrement
 

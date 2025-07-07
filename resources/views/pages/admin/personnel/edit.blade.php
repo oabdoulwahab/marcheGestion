@@ -5,7 +5,7 @@
             <div class="container">
                 <h1>Modifier l'utilisateur</h1>
 
-                <form action="{{ route('personnel.update', $personnel->id) }}" method="POST">
+                <form action="{{ route('admin.personnel.update', $personnel->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -59,7 +59,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                    <a href="{{ route('personnel.index') }}" class="btn btn-secondary">Annuler</a>
+                    <a href="{{ route('admin.personnel.index') }}" class="btn btn-secondary">Annuler</a>
                 </form>
             </div>
         </div>

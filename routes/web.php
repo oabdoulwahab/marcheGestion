@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ChartController;
 use App\Http\Controllers\Admin\{
     MarketController,
     ContratController,
@@ -12,10 +11,13 @@ use App\Http\Controllers\Admin\{
     PersonnelController,
     DashboardController,
     MerchantController,
+    ChartController,
     EspaceController
 };
 use App\Http\Controllers\Admin\ContratController as AdminContratController;
 use App\Http\Controllers\Agent\AgentContratController;
+use Illuminate\Support\Facades\Artisan;
+
 
 Auth::routes();
 
@@ -56,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Routes réservées aux admins
-    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['role:admin,agent'])->prefix('admin')->name('admin.')->group(function () {
         Route::resources([
             'personnel' => PersonnelController::class,
             'finance' => FinancesController::class,

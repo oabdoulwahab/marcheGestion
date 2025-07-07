@@ -131,9 +131,7 @@
                                     <a href="{{ route('contrat.show', $contrat->id) }}" class="btn btn-primary" title="Voir">
                                         <i class="feather icon-eye"></i>
                                     </a>
-                                    <a href="{{ route('contrat.edit', $contrat->id) }}" class="btn btn-success" title="Modifier">
-                                        <i class="feather icon-edit"></i>
-                                    </a>
+                                   
                                     <form action="{{ route('contrat.destroy', $contrat->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')

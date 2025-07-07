@@ -15,9 +15,6 @@
                     <i class="fas fa-plus-circle mr-2"></i>Ajouter un espace
                 </button>
                 
-                <a href="#" class="btn btn-success">
-                    <i class="fas fa-plus-circle mr-2"></i> Ajouter
-                </a>
                 
             </div>
         </div>

@@ -49,7 +49,7 @@
         </div>
         <div class="card">
             <div class="card-body">
-              <h6 class="card-title">Performance SEO</h6>
+              <h6 class="card-title">Performance </h6>
               <div class="publications mt-3">
                 <!-- Publications du jour -->
                 <h6 class="text-primary">Aujourd'hui</h6>

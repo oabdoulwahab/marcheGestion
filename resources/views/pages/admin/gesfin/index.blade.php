@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-auto">
-                                    <a href="{{ route('cotisation.show', $cotisation->id) }}"
+                                    <a href="{{ route('admin.finance.show', $cotisation->id) }}"
                                         class="btn btn-outline-primary btn-block w-100">
                                         <i class="fas fa-eye me-2"></i>Voir les détails
                                     </a>
@@ -71,7 +71,7 @@
             </div>
 
             <div class="text-center mt-4">
-                <a href="{{ route('cotisation.index') }}" class="btn btn-success">
+                <a href="{{ route('admin.finance.index') }}" class="btn btn-success">
                     <i class="fas fa-arrow-right me-2"></i>Voir plus de cotisations
                 </a>
             </div>

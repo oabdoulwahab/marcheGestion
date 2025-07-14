@@ -8,7 +8,7 @@
 
         <div class="container my-5">
             <!-- Titre principal -->
-            <h1 class="text-center mb-4">CONTRAT TYPE {{ $contrat->contrat_name }}</h1>
+            <h1 class="text-center mb-4">CONTRAT DE {{ $contrat->contrat_name }}</h1>
             <h2 class="text-center">Conteneur</h2>
             <hr>
     

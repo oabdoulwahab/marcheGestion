@@ -13,7 +13,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <form action="{{ route('finance.store') }}" method="POST">
+                                <form action="{{ route('admin.finance.store') }}" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <label for="name">Nom de la transaction</label>

@@ -48,11 +48,6 @@
                                 <small class="text-muted">Optionnel</small>
                             </div>
                         
-                            <div class="form-group">
-                                <label for="vendeur_email">Email du vendeur</label>
-                                <input type="email" name="vendeur_email" id="vendeur_email" class="form-control">
-                                <small class="text-muted">Optionnel</small>
-                            </div>
                         
                             <div class="form-group">
                                 <label for="acheteur_name">Nom de l'acheteur</label>
@@ -78,20 +73,10 @@
                                 <small class="text-muted">Optionnel</small>
                             </div>
                         
-                            <div class="form-group">
-                                <label for="acheteur_email">Email de l'acheteur</label>
-                                <input type="email" name="acheteur_email" id="acheteur_email" class="form-control">
-                                <small class="text-muted">Optionnel</small>
-                            </div>
                         
                             <div class="form-group">
                                 <label for="date_debut">Date de début</label>
                                 <input type="date" name="date_debut" id="date_debut" class="form-control" required>
-                            </div>
-                        
-                            <div class="form-group">
-                                <label for="date_fin">Date de fin</label>
-                                <input type="date" name="date_fin" id="date_fin" class="form-control" required>
                             </div>
                         
                             <div class="form-group">

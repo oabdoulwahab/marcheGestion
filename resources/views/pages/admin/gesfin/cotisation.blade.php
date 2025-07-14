@@ -14,7 +14,7 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <form method="POST" action="{{ route('cotisation.store') }}"
+                                <form method="POST" action="{{ route('admin.finance.store') }}"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <!-- Montant total de la cotisation -->

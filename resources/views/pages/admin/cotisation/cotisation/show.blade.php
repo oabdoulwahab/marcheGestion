@@ -18,7 +18,7 @@
                     <h3 class="font-weight-bold text-dark mb-3 mb-md-0">
                         {{ $cotisation->name }}
                     </h3>
-                    <a href="{{ route('finance.index') }}" class="btn btn-danger">
+                    <a href="{{ route('admin.finance.index') }}" class="btn btn-danger">
                         <i class="feather icon-arrow-left mr-2"></i> Retour
                     </a>
                 </div>

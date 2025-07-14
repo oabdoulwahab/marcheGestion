@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\Admin\{
     MarketController,
     ContratController,
@@ -62,8 +63,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resources([
             'personnel' => PersonnelController::class,
             'finance' => FinancesController::class,
+            'cotisation' => CotisationController::class
         ]);
-        
+        Route::post('cotisation/addAdherents',[CotisationController::class,'addAdherents'])->name('cotisation.addAdherents');
         Route::put('finance/{id}/{status}', [FinancesController::class, 'updateStatus'])
             ->name('finance.updateStatus');
     });

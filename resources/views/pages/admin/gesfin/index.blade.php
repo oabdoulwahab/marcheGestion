@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-auto">
-                                    <a href="{{ route('admin.finance.show', $cotisation->id) }}"
+                                    <a href="{{ route('admin.cotisation.show', $cotisation->id) }}"
                                         class="btn btn-outline-primary btn-block w-100">
                                         <i class="fas fa-eye me-2"></i>Voir les détails
                                     </a>

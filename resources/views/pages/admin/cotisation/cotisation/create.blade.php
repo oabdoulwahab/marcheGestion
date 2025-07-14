@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('cotisation.addAdherents', $cotisation->id) }}" method="POST">
+                <form action="{{ route('admin.cotisation.addAdherents', $cotisation->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="adherents">Sélectionnez un adhérent</label>

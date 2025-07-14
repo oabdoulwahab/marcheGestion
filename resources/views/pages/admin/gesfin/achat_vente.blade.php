@@ -4,8 +4,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addMemberModalLabel">Ajouter une Dépense</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    
                 </button>
             </div>
             <div class="modal-body">
@@ -34,7 +34,11 @@
                                         <label for="amount">Montant</label>
                                         <input type="number" name="amount" class="form-control" id="amount" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Créer</button>
+                                    <!-- Boutons -->
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="submit" class="btn btn-primary">Créer la Dépense</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>

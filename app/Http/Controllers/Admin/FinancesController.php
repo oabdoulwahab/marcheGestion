@@ -17,7 +17,7 @@ class FinancesController extends Controller
     // Récupérer les 3 dernières cotisations
     $cotisations = Cotisation::withCount('marchants')
         ->latest() // Trier par date de création décroissante
-        ->take(3) // Limiter à 3 résultats
+        ->take(3) 
         ->get();
 
     // Récupérer toutes les finances et marchands (si nécessaire)
@@ -70,7 +70,7 @@ public function indexByType($type)
     ]);
 
     // Retourner à la liste avec un message de succès
-    return redirect()->route('finance.index')
+    return redirect()->route('admin.finance.index')
         ->with('success', 'Transaction créée avec succès.');
 }
 

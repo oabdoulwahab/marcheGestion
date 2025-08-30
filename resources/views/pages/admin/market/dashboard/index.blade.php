@@ -31,12 +31,12 @@
             <div class="col-12 mt-4">
                 <div class="card shadow-sm">
                     <!-- Header du Dashboard -->
-                    <div class="card-header bg-light">
+                    <!-- <div class="card-header bg-light">
                         <h4 class="font-weight-bold text-dark">Dashboard - Aperçu des Marchés</h4>
-                    </div>
+                    </div> -->
 
                     <!-- Contenu du Dashboard -->
-                    <div class="card-body">
+                    <!-- <div class="card-body"> -->
                         @include('pages.admin.market.dashboard.header')
                     </div>
                 </div>

@@ -44,7 +44,7 @@ class EspaceController extends Controller
             // 'secteur_id' => $request->secteur_id,
             'status' => 'Disponible',
         ]);
-        dd($request->all());
+        // dd($request->all());
         return redirect()->back()->with('success', 'Espace ajouté avec succès.');
     }
 

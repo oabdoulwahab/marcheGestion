@@ -122,7 +122,7 @@
                                                 <td>{{ $finance->type }}</td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="{{ route('finance.show', $finance->id) }}"
+                                                        <a href="{{ route('admin.finance.show', $finance->id) }}"
                                                             class="btn btn-primary btn-sm mr-2" title="Voir">
                                                             <i class="feather icon-eye"></i>
                                                         </a>

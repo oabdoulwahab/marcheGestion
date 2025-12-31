@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 class Marchant extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToMarket;
     protected $fillable = [
         'name',
         'address',
@@ -15,7 +16,14 @@ class Marchant extends Model
         'secteur_id',
         'espace_id',
         'date_inscription',
+        'market_id',
     ];
+
+    // Relation avec Market
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
 
     // Relation many-to-many avec Cotisation
     public function cotisations()

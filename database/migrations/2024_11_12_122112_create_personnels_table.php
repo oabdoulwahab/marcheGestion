@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('poste');
             $table->string('contact');
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

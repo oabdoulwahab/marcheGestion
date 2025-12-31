@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 class Cotisation extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name', 'montant_total', 'date_debut', 'date_fin'];
+    use HasFactory , BelongsToMarket;
+    protected $fillable = ['name', 'montant_total', 'date_debut', 'date_fin','market_id'];
 
     // Relation many-to-many avec marchant
     public function marchants()

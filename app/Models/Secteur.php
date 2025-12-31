@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 
 
    
     class Secteur extends Model
     {
-        use HasFactory;
+        use HasFactory, BelongsToMarket;
     
         protected $fillable = [
             'name',
             'description',
             'user_id',
+            'market_id',
         ];
     
         // Relation avec Merchant
@@ -34,6 +36,11 @@ use Illuminate\Database\Eloquent\Model;
         public function user()
         {
             return $this->belongsTo(User::class);
+        }
+        // Relation avec Market
+        public function market()
+        {
+            return $this->belongsTo(Market::class);
         }
     }
     

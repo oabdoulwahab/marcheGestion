@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 class Vendeur extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToMarket;
 
     protected $fillable = [
         'name',
         'phone',
         'email',
         'addresse',
+        'market_id',
     ];
 
     public function contrats()

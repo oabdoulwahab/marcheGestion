@@ -5,10 +5,11 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\BelongsToMarket;
 
 class Contrat extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToMarket;
     protected $fillable = [
         'contrat_name',
         'numero_contrat',
@@ -18,7 +19,14 @@ class Contrat extends Model
         'status',
         'vendeur_id',
         'acheteur_id',
+        'market_id',
     ];
+
+    // Relation avec Market
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
     
 
     public function vendeur()

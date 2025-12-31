@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('type', ['vente', 'achat']); 
             $table->decimal('amount', 15, 2); 
             $table->enum('status', ['En attente', 'Complété', 'Annulé']);
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps(); 
         });
     }

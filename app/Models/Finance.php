@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 class Finance extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToMarket;
     protected $fillable = [
         'name',
         'description',
         'type',
         'amount',
         'status',
+        'market_id',
     ];
 
     protected $attributes = [

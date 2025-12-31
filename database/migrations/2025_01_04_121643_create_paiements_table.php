@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('cotisation_id')->constrained()->onDelete('cascade'); // Clé étrangère vers la cotisation
             $table->decimal('montant', 10, 2); // Montant du paiement
             $table->date('date_paiement'); // Date du paiement
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

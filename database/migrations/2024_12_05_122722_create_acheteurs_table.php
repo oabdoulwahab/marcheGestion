@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->nullable(); // Email (optionnel)
             $table->string('activite')->nullable(); // Activité exercée
             $table->string('addresse')->nullable(); // Adresse (optionnel)
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

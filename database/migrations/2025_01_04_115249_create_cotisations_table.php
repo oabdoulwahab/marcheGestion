@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('montant_total', 10, 2); // Montant total de la cotisation
             $table->date('date_debut'); // Date de début de la cotisation
             $table->date('date_fin'); // Date de fin de la cotisation
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

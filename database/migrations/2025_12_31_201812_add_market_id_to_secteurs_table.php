@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::table('secteurs', function (Blueprint $table) {
+            $table->foreignId('market_id')->nullable()->constrained()->onDelete('cascade');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('secteurs', function (Blueprint $table) {
+            $table->dropForeign(['market_id']);
+            $table->dropColumn('market_id');
+        });
+    }
+};

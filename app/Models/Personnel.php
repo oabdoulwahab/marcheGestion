@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToMarket;
 
 class Personnel extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToMarket;
     protected $fillable = [
         'nom',
         'prenom',
@@ -16,6 +17,7 @@ class Personnel extends Model
         'poste',
         'ventes',
         'chiffre_affaire',
+        'market_id',
     ];
 
     /**

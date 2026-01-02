@@ -22,8 +22,14 @@ class Acheteur extends Model
     
 
     public function contrats()
-{
-    return $this->hasMany(Contrat::class);
-}
+    {
+        return $this->hasMany(Contrat::class);
+    }
+     
+    // Relation avec Market (héritée du trait BelongsToMarket)
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
 
 }

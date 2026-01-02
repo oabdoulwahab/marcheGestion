@@ -13,12 +13,17 @@ class Paiement extends Model
 
    // Relation many-to-one avec Marchant
    public function marchant()
-{
-    return $this->belongsTo(Marchant::class);
-}
+    {
+        return $this->belongsTo(Marchant::class);
+    }
 
-public function cotisation()
-{
-    return $this->belongsTo(Cotisation::class);
-}
+    public function cotisation()
+    {
+        return $this->belongsTo(Cotisation::class);
+    }
+
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
 }

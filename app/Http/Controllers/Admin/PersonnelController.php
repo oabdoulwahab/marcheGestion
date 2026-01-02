@@ -2,115 +2,74 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use App\Models\Personnel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class PersonnelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $personnels = User::all();
-        // $roles = User::select('role')->distinct()->get();
-        return View('pages.admin.personnel.index',compact('personnels'));
+        $marketId = session('current_market_id');
+        return view('pages.admin.personnel.index', ['personnels' => User::where('market_id', $marketId)->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
-{
-    
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'contact' => 'nullable|string|max:15',
-        'role' => 'required|string|exists:users,role',
-    ]);
-
-    $personnel= User::create([
-        'name' => $request->input('name'),
-        'email' => $request->input('email'),
-        'password' => Hash::make('password'), // Mot de passe par défaut
-        'phone' => $request->input('contact'),
-        'role' => $request->input('role'),
-    ]);
-    $personnel->save();
-
-    return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur enregistré avec succès.');
-}
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
     {
-        //
+        $this->authorize('create', User::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'contact' => 'nullable|string|max:15',
+            'role' => 'required|string',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['contact'],
+            'role' => $validated['role'],
+            'password' => Hash::make('password'),
+            'market_id' => session('current_market_id'),
+        ]);
+
+        return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur enregistré avec succès.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
-        $personnel = User::findOrFail($id);
-        $personnels = User::all();
-        return view('pages.admin.personnel.edit',compact('personnel','personnels'));
+        $marketId = session('current_market_id');
+        return view('pages.admin.personnel.edit', [
+            'personnel' => User::where('market_id', $marketId)->findOrFail($id),
+            'personnels' => User::where('market_id', $marketId)->get(),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
-      
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email,' . $id,
-                'contact' => 'nullable|string|max:15',
-                'role' => 'required|string',
-            ]);
-    
-            $user = User::findOrFail($id);
-            $user->update([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('contact'),
-                'role' => $request->input('role'),
-                'password' => $request->filled('password') ? Hash::make($request->input('password')) : $user->password,
-            ]);
-    
-            return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur mis à jour avec succès.');
-        
+        $marketId = session('current_market_id');
+        $this->authorize('update', User::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'contact' => 'nullable|string|max:15',
+            'role' => 'required|string',
+        ]);
+
+        User::where('market_id', $marketId)->findOrFail($id)->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['contact'],
+            'role' => $validated['role'],
+            'password' => $request->filled('password') ? Hash::make($request->password) : null,
+        ]);
+
+        return redirect()->route('admin.personnel.index')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-          
-    $personnel = User::findOrFail($id); // Récupère l'enregistrement ou lance une exception si introuvable
-    
-    $personnel->delete(); // Supprime l'enregistrement
-
-    return redirect()->back()->with('success', 'Un personnel supprimé avec succès');; 
+        $marketId = session('current_market_id');
+        $personnel = User::where('market_id', $marketId)->findOrFail($id);
+        $this->authorize('delete', $personnel);
+        $personnel->delete();
+        return redirect()->back()->with('success', 'Personnel supprimé avec succès');
     }
 }

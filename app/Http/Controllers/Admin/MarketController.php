@@ -8,97 +8,32 @@ use Illuminate\Http\Request;
 
 class MarketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $secteurs = Secteur::all();
+        $marketId = session('current_market_id');
+        $secteurs = Secteur::withCount('marchants')->where('market_id', $marketId)->get();
+        $totalMarchants = $secteurs->sum('marchants_count');
 
-        // Calculer le nombre total de secteurs
-        $totalMarchants = $secteurs->sum(function ($secteur) {
-            return $secteur->marchants()->count();
-        });
+        $dataSecteurs = $secteurs->map(function ($secteur, $index) use ($totalMarchants, $secteurs) {
+            $percentage = $totalMarchants > 0 
+                ? ($secteur->marchants_count / $totalMarchants) * 100 
+                : 0;
 
-        $dataSecteurs = $secteurs->map(function ($secteur) use ($totalMarchants) {
-            return [
-                'name' => $secteur->name,
-                'count' => $secteur->marchants()->count(),
-                'rawPercentage' => $totalMarchants > 0 ? ($secteur->marchants()->count() / $totalMarchants) * 100 : 0,
-            ];
-        });
-
-        // Ajustement final pour éviter les dépassements
-        $totalPercentage = 0;
-        $dataSecteurs = $dataSecteurs->map(function ($secteur, $index) use (&$totalPercentage, $dataSecteurs) {
-            // Arrondi du pourcentage
-            $lastElement = $index === $dataSecteurs->count() - 1;
-            $roundedPercentage = round($secteur['rawPercentage'], 2);
-
-            // Ajuster le dernier pourcentage pour garantir 100%
-            if ($lastElement) {
-                $roundedPercentage = 100 - $totalPercentage;
+            // Ajuster le dernier élément à 100%
+            if ($index === $secteurs->count() - 1) {
+                $percentage = 100 - $secteurs->slice(0, $index)
+                    ->sum(fn($s) => round(($s->marchants_count / $totalMarchants) * 100, 2));
             }
 
-            $totalPercentage += $roundedPercentage;
-
             return [
-                'name' => $secteur['name'],
-                'count' => $secteur['count'],
-                'percentage' => $roundedPercentage,
+                'name' => $secteur->name,
+                'count' => $secteur->marchants_count,
+                'percentage' => round($percentage, 2),
             ];
         });
-        $espaces = Espace::all();
-        $secteurs = Secteur::withCount('marchants')->get();
-        return View('pages.admin.market.dashboard.index', compact('secteurs','espaces', 'totalMarchants', 'dataSecteurs'));
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $espaces = Espace::where('market_id', $marketId)->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('pages.admin.market.dashboard.index', compact('secteurs', 'espaces', 'totalMarchants', 'dataSecteurs'));
     }
 }

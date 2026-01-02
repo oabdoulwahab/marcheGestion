@@ -13,13 +13,18 @@ class Cotisation extends Model
 
     // Relation many-to-many avec marchant
     public function marchants()
-{
-    return $this->belongsToMany(Marchant::class, 'cotisation_marchant')->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Marchant::class, 'cotisation_marchant')->withTimestamps();
+    }
 
     // Relation one-to-many avec Paiement
     public function paiements()
     {
         return $this->hasMany(Paiement::class);
+    }
+
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
     }
 }

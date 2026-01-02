@@ -13,7 +13,8 @@ class FinancesController extends Controller
     public function index()
     {
         //
-        $finances = Finance::all();
+        $marketId = session('current_market_id');
+        $finances = Finance::where('market_id', $marketId)->get();
         return View('pages.admin.gesfin.index', compact('finances'));
 
     }
@@ -26,35 +27,37 @@ class FinancesController extends Controller
 
     // Stocker une nouvelle dépense
     public function store(Request $request)
-{
-    // Validation des données
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'type' => 'nullable|in:revenu,dépense', 
-        'amount' => 'required|numeric|min:0',
-        'status' => 'nullable|in:En attente,Complété,Annulé', 
-    ]);
+    {
+        $this->authorize('create', Finance::class);
+        // Validation des données
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'nullable|in:revenu,dépense', 
+            'amount' => 'required|numeric|min:0',
+            'status' => 'nullable|in:En attente,Complété,Annulé', 
+        ]);
 
-    // Si le type n'est pas fourni, il prend 'dépense' par défaut
-    $type = $request->type ?? 'dépense';
+        // Si le type n'est pas fourni, il prend 'dépense' par défaut
+        $type = $request->type ?? 'dépense';
 
-    // Si le statut n'est pas fourni, il prend 'En attente' par défaut
-    $status = $request->status ?? 'En attente';
+        // Si le statut n'est pas fourni, il prend 'En attente' par défaut
+        $status = $request->status ?? 'En attente';
 
-    // Créer une nouvelle transaction avec les valeurs fournies ou par défaut
-    Finance::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'type' => $type,
-        'amount' => $request->amount,
-        'status' => $status,
-    ]);
+        // Créer une nouvelle transaction avec les valeurs fournies ou par défaut
+        Finance::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $type,
+            'amount' => $request->amount,
+            'status' => $status,
+            'market_id' => session('current_market_id'),
+        ]);
 
-    // Retourner à la liste avec un message de succès
-    return redirect()->route('finance.index')
-        ->with('success', 'Transaction créée avec succès.');
-}
+        // Retourner à la liste avec un message de succès
+        return redirect()->route('finance.index')
+            ->with('success', 'Transaction créée avec succès.');
+    }
 
 
     // Afficher une dépense spécifique
@@ -97,7 +100,8 @@ public function update(Request $request, $id)
     // Supprimer une dépense
     public function destroy($id)
     {
-        $finance = Finance::findOrFail($id);
+        $finance = Finance::where('id', $id)->firstOrFail();
+        $this->authorize('delete', $finance);
         $finance->delete();
     
         return redirect()->back()->with('success', 'Supprimé avec succès'); 

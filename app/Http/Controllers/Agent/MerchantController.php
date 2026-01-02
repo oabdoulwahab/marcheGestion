@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Agent;
 
-use App\Models\Espace;
-use App\Models\Secteur;
-use App\Models\Marchant;
 use App\Models\Cotisation;
+use App\Models\Espace;
+use App\Models\Marchant;
+use App\Models\Secteur;
 use Illuminate\Http\Request;
 
 class MerchantController extends Controller
@@ -31,6 +31,7 @@ class MerchantController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Marchant::class);
         // Validation des données
         $request->validate([
             'name' => 'required|max:255',
@@ -59,20 +60,19 @@ class MerchantController extends Controller
         return redirect()->back()->with('success', 'Commerçant ajouté avec succès');
     }
 
-
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
+        $marketId = session('current_market_id');
         // Récupérer un secteur spécifique avec ses commerçants et leurs espaces
-        $secteurs = Secteur::findOrFail($id);
+        $secteurs = Secteur::where('market_id', $marketId)->findOrFail($id);
         $marchands = $secteurs->marchants;
+
         // Retourner la vue avec les données du secteur
         return view('pages.agent.market.marchant.index', compact('secteurs', 'marchands'));
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -80,11 +80,14 @@ class MerchantController extends Controller
     public function edit(string $id)
     {
         //
-         //
-         $marchant = Marchant::findOrFail($id);
-         $espaces = Espace::all();
-         return view('pages.agent.market.marchant.edit',compact('marchant','espaces'));
-   
+        $marketId = session('current_market_id');
+        $marchant = Marchant::where('market_id', $marketId)->where('id', $id)->firstOrFail();
+        $this->authorize('update', $marchant);
+
+        $espaces = Espace::where('market_id', $marketId)->get();
+
+        return view('pages.agent.market.marchant.edit', compact('marchant', 'espaces'));
+
     }
 
     /**
@@ -98,19 +101,19 @@ class MerchantController extends Controller
             'phone' => 'nullable|string|max:15',
             'espace_id' => 'required|exists:espaces,id',
         ]);
-    
-        $marchant = Marchant::findOrFail($id);
+
+        $marchant = Marchant::where('market_id', session('current_market_id'))->where('id', $id)->firstOrFail();
+        $this->authorize('update', $marchant);
+
         $marchant->name = $request->input('name');
         $marchant->address = $request->input('address');
         $marchant->phone = $request->input('phone');
         $marchant->espace_id = $request->input('espace_id');
         $marchant->save();
-    
-        return redirect()->route('secteur.show', $marchant->secteur->id)
-                         ->with('success', 'Marchand mis à jour avec succès.');
-    }
-    
 
+        return redirect()->route('secteur.show', $marchant->secteur->id)
+            ->with('success', 'Marchand mis à jour avec succès.');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -119,11 +122,13 @@ class MerchantController extends Controller
     {
         // Vérifier si le commerçant est associé à un espace
         if ($marchant->espace_id) {
+            // Mettre à jour le statut de l'espace associé
             $espace = Espace::find($marchant->espace_id);
             $espace->update(['status' => 'Disponible']);
         }
 
         // Supprimer le commerçant
+        $this->authorize('delete', $marchant);
         $marchant->delete();
 
         return redirect()->back()->with('success', 'Commerçant supprimé avec succès');
@@ -132,19 +137,23 @@ class MerchantController extends Controller
     public function showAdherent($cotisationId, $marchantId)
     {
         // Récupérer la cotisation
-        $cotisation = Cotisation::findOrFail($cotisationId);
-    
+        $marketId = session('current_market_id');
+        $cotisation = Cotisation::where('market_id', $marketId)->findOrFail($cotisationId);
+
         // Récupérer l'adhérent avec ses paiements pour cette cotisation
-        $marchant = Marchant::with(['paiements' => function ($query) use ($cotisationId) {
-            $query->where('cotisation_id', $cotisationId);
-        }])->findOrFail($marchantId);
-    
+        $marchant = Marchant::$marchant = Marchant::where('market_id', $marketId)
+            ->where('id', $marchantId)
+            ->with(['paiements' => function ($query) use ($cotisationId) {
+                $query->where('cotisation_id', $cotisationId);
+            }])
+            ->firstOrFail();
+
         // dd($marchant);
         // Calculer les montants pour l'adhérent
         $montantTotal = $cotisation->montant_total;
         $montantDejaPaye = $marchant->paiements->sum('montant');
         $resteAPayer = $montantTotal - $montantDejaPaye;
-    
+
         // Passer les données à la vue
         return view('pages.admin.cotisation.marchant.show', compact('cotisation', 'marchant', 'montantTotal', 'montantDejaPaye', 'resteAPayer'));
     }

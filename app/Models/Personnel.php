@@ -25,7 +25,12 @@ class Personnel extends Model
      */
     public function performance()
     {
-        $totalVentes = Finance::sum('montant'); // Supposez que "Finance" a toutes les ventes
+        $totalVentes = Finance::sum('amount'); // Supposez que "Finance" a toutes les ventes
         return $totalVentes > 0 ? round(($this->chiffre_affaire / $totalVentes) * 100, 2) : 0;
+    }
+
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
     }
 }

@@ -2,167 +2,115 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Models\Acheteur;
 use App\Models\Contrat;
+use App\Models\Marchant;
 use App\Models\Secteur;
 use App\Models\Vendeur;
-use App\Models\Acheteur;
-use App\Models\Marchant;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Excel;
-use App\Exports\ContratExport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class ContratController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-    //     //
-       $marchants = Marchant::all();
-        $secteurs = Secteur::all();
-         $contrats = Contrat::all();
-        return View('pages.agent.market.contrat.index', compact('marchants', 'secteurs', 'contrats'));
-     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $marketId = session('current_market_id');
+        return view('pages.agent.market.contrat.index', [
+            'marchants' => Marchant::where('market_id', $marketId)->get(),
+            'secteurs' => Secteur::where('market_id', $marketId)->get(),
+            'contrats' => Contrat::where('market_id', $marketId)->latest()->get(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validation des données
-        $validatedData = $request->validate([
+        $this->authorize('create', Contrat::class);
+        $validated = $request->validate([
             'contrat_name' => 'required|string|max:255',
-            'vendeur_name' => 'string|max:255|nullable',
-            'vendeur_address' => 'string|max:255|nullable',
-            'vendeur_phone' => 'string|max:15|nullable',
-            'vendeur_email' => 'string|max:255|nullable',
-            'acheteur_name' => 'string|max:255|nullable',
-            'acheteur_phone' => 'string|max:15|nullable',
-            'acheteur_address' => 'string|max:255|nullable',
-            'acheteur_activite' => 'string|max:15|nullable',
-            'acheteur_email' => 'string|max:255|nullable',
+            'vendeur_name' => 'nullable|string|max:255',
+            'vendeur_address' => 'nullable|string|max:255',
+            'vendeur_phone' => 'nullable|string|max:15',
+            'vendeur_email' => 'nullable|email|max:255',
+            'acheteur_name' => 'nullable|string|max:255',
+            'acheteur_phone' => 'nullable|string|max:15',
+            'acheteur_address' => 'nullable|string|max:255',
+            'acheteur_activite' => 'nullable|string|max:15',
+            'acheteur_email' => 'nullable|email|max:255',
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            'montant' => 'required|numeric',
+            'montant' => 'required|numeric|min:0',
         ]);
 
-        // Génération du numéro de contrat
-        $currentDate = now()->format('Ymd');
-        $timeStamp = now()->format('His');
-        $numeroContrat = 'CONTRAT N°' . $currentDate . '-' . $timeStamp;
+        $contrat = Contrat::create([
+            'numero_contrat' => $this->generateNumeroContrat(),
+            'contrat_name' => $validated['contrat_name'],
+            'vendeur_id' => $this->getOrCreateVendeur($validated)?->id,
+            'acheteur_id' => $this->getOrCreateAcheteur($validated)?->id,
+            'date_debut' => $validated['date_debut'],
+            'date_fin' => $validated['date_fin'],
+            'montant' => $validated['montant'],
+            'market_id' => session('current_market_id'),
+        ]);
 
-        // Gestion du vendeur
-        $vendeur = null;
-        if (!empty($validatedData['vendeur_name'])) {
-            $vendeur = Vendeur::firstOrCreate(
-                ['name' => $validatedData['vendeur_name']],
-                [
-                    'addresse' => $validatedData['vendeur_address'] ?? null,
-                    'phone' => $validatedData['vendeur_phone'] ?? null,
-                    'email' => $validatedData['vendeur_email'] ?? null,
-                ]
-            );
-        }
-
-        // Gestion de l'acheteur
-        $acheteur = null;
-        if (!empty($validatedData['acheteur_name'])) {
-            $acheteur = Acheteur::firstOrCreate(
-                ['name' => $validatedData['acheteur_name']],
-                [
-                    'addresse' => $validatedData['acheteur_address'] ?? null,
-                    'phone' => $validatedData['acheteur_phone'] ?? null,
-                    'email' => $validatedData['acheteur_email'] ?? null,
-                    'activite' => $validatedData['acheteur_activite'] ?? null,
-                ]
-            );
-        }
-
-        // Création du contrat
-        $contrat = new Contrat();
-        $contrat->numero_contrat = $numeroContrat;
-        $contrat->contrat_name = $validatedData['contrat_name'];
-        $contrat->vendeur_id = $vendeur ? $vendeur->id : null;
-        $contrat->acheteur_id = $acheteur ? $acheteur->id : null;
-        $contrat->date_debut = $validatedData['date_debut'];
-        $contrat->date_fin = $validatedData['date_fin'];
-        $contrat->montant = $validatedData['montant'];
-
-        // Mise à jour automatique du statut
-        // $contrat->updateStatus();
-
-        $contrat->save();
-
-        // Redirection avec un message de succès
-        return back()->with('success', 'Contrat ajouté avec succès avec le numéro : ' . $numeroContrat);
+        return back()->with('success', "Contrat ajouté : {$contrat->numero_contrat}");
     }
 
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
-        $contrat = Contrat::with('vendeur')->findOrFail($id);
+        $marketId = session('current_market_id');
+        $contrat = Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id);
+
         return view('pages.agent.market.contrat.show', compact('contrat'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
+        $marketId = session('current_market_id');
+        $contrat = Contrat::where('market_id', $marketId)->where('id', $id)->firstOrFail();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $this->authorize('delete', $contrat);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-        $contrat = Contrat::findOrFail($id);
         $contrat->delete();
+
+        return back()->with('success', 'Contrat supprimé');
     }
 
     public function exportPDF($id)
     {
-        $contrat = Contrat::with('vendeur', 'acheteur')->findOrFail($id);
+        $marketId = session('current_market_id');
+        $contrat = Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id);
 
-        // Génération du PDF
-        $pdf = Pdf::loadView('exports.contrat', compact('contrat'));
-
-        // Téléchargement du fichier PDF
-        return $pdf->download('contrat_' . $contrat->numero_contrat . '.pdf');
+        return Pdf::loadView('exports.contrat', compact('contrat'))
+            ->download("contrat_{$contrat->numero_contrat}.pdf");
     }
 
-
-    public function exportExcel($id)
+    private function generateNumeroContrat()
     {
-        $contrat = Contrat::findOrFail($id);
-
-        // return Excel::download(new ContratExport($contrat), 'contrat_' . $contrat->numero_contrat . '.xlsx');
+        return 'CONTRAT N°'.now()->format('YmdHis');
     }
 
+    private function getOrCreateVendeur(array $data)
+    {
+        return empty($data['vendeur_name']) ? null : Vendeur::firstOrCreate(
+            ['name' => $data['vendeur_name']],
+            [
+                'addresse' => $data['vendeur_address'] ?? null,
+                'phone' => $data['vendeur_phone'] ?? null,
+                'email' => $data['vendeur_email'] ?? null,
+            ]
+        );
+    }
+
+    private function getOrCreateAcheteur(array $data)
+    {
+        return empty($data['acheteur_name']) ? null : Acheteur::firstOrCreate(
+            ['name' => $data['acheteur_name']],
+            [
+                'addresse' => $data['acheteur_address'] ?? null,
+                'phone' => $data['acheteur_phone'] ?? null,
+                'email' => $data['acheteur_email'] ?? null,
+                'activite' => $data['acheteur_activite'] ?? null,
+            ]
+        );
+    }
 }

@@ -15,11 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
+            $table->string('email')->nullable();
+            $table->string('telephone')->nullable();
             $table->string('poste');
-            $table->string('contact');
+            $table->integer('ventes')->default(0);
+            $table->decimal('chiffre_affaire', 15, 2)->default(0);
             $table->foreignId('market_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
+
     }
 
     /**

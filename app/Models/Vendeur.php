@@ -19,8 +19,14 @@ class Vendeur extends Model
     ];
 
     public function contrats()
-{
-    return $this->hasMany(Contrat::class);
-}
+    {
+        return $this->hasMany(Contrat::class);
+    }
+
+    
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
 
 }

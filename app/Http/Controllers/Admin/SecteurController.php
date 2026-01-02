@@ -2,121 +2,67 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Marchant;
-use Exception;
 use App\Models\Secteur;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SecteurController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $secteurs = Secteur::with('user')->get();
-        return View('pages.admin.secteur.index',compact('secteurs'));
-
+        $marketId = session('current_market_id');
+        $secteurs = Secteur::with('user')->where('market_id', $marketId)->paginate(20);
+        return view('pages.admin.secteur.index', compact('secteurs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
-        return View('pages.admin.secteur.create');
-
+        return view('pages.admin.secteur.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-
+        $this->authorize('create', Secteur::class);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'string|max:255|nullable',
+            'description' => 'nullable|string|max:255',
         ]);
 
         Secteur::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'user_id' => Auth::id(), // Enregistre l'utilisateur connecté
+            ...$validated,
+            'user_id' => Auth::id(),
+            'market_id' => session('current_market_id'),
         ]);
 
         return redirect()->route('secteur.index')->with('success', 'Secteur créé avec succès.');
     }
-    
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-        $marchand = Marchant::findOrFail($id);
-        return view('pages.admin.market.marchant.show',compact('marchand'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        //
-        $secteur=Secteur::findOrFail($id);
-        return View('pages.admin.secteur.edit',compact('secteur'));
-
+        $marketId = session('current_market_id');
+        $secteur = Secteur::where('market_id', $marketId)->findOrFail($id);
+        return view('pages.admin.secteur.edit', compact('secteur'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-    // Validation des données du formulaire
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string|max:1000',
-    ]);
-
-    try {
-        // Récupérer le secteur à mettre à jour
-        $secteur = Secteur::findOrFail($id);
-
-        // Mettre à jour les champs avec les données validées
-        $secteur->update([
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
+        $this->authorize('update', Secteur::class);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
         ]);
 
-        // Redirection avec un message de succès
-        return redirect()
-            ->route('secteur.index')
-            ->with('success', 'Le secteur a été mis à jour avec succès.');
-    } catch (Exception $e) {
-        // En cas d'erreur, redirection avec un message d'erreur
-        return redirect()
-            ->back()
-            ->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour du secteur.'])
-            ->withInput();
+        Secteur::where('market_id', $marketId)->findOrFail($id)->update($validated);
+        return redirect()->route('secteur.index')->with('success', 'Secteur mis à jour.');
     }
-}
 
-    
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $secteur = Secteur::findOrFail($id);
+        $marketId = session('current_market_id');
+        $secteur = Secteur::where('market_id', $marketId)->where('id', $id)->firstOrFail();
+        $this->authorize('delete', $secteur);
         $secteur->delete();
-        return redirect()->back()->with('success', 'Supprimé avec succès');
+        return redirect()->back()->with('success', 'Supprimé avec succès.');
     }
 }

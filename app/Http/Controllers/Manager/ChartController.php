@@ -10,8 +10,9 @@ class ChartController extends Controller
 {
     //
     public function index(){
-        $personne = Personnel::all();
-        $finances = Finance::select('type', 'amount')->get();
+        $marketId = session('current_market_id');
+        $personne = Personnel::where('market_id', $marketId)->get();
+        $finances = Finance::select('type', 'amount')->where('market_id', $marketId)->get();
 
         $data = [['types', 'montant']];
         foreach ($finances as $finances) {

@@ -13,7 +13,8 @@ class PersonnelController extends Controller
     public function index()
     {
         //
-        $personnels = Personnel::all();
+        $marketId = session('current_market_id');
+        $personnels = Personnel::where('market_id', $marketId)->get();
         return View('pages.admin.personnel.index',compact('personnels'));
     }
 
@@ -30,6 +31,7 @@ class PersonnelController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Personnel::class);
         //
         $request->validate([
         'nom' => 'required|string|max:255',
@@ -47,8 +49,9 @@ class PersonnelController extends Controller
             'prenom' => $request->prenom,
             'poste' => $request->poste,
             'contact' => $request->contact,
-            'ventes' => $request->prenom,
-            'chiffre_affaire' => $request->poste,
+            'ventes' => $request->ventes,
+            'chiffre_affaire' => $request->chiffre_affaire,
+            'market_id' => session('current_market_id'),
         ]);
         $personnels->save();
 
@@ -85,9 +88,9 @@ class PersonnelController extends Controller
     public function destroy(string $id)
     {
           
-    $personnel = Personnel::findOrFail($id); // Récupère l'enregistrement ou lance une exception si introuvable
-    
-    $personnel->delete(); // Supprime l'enregistrement
+        $personnel = Personnel::where('id', $id)->firstOrFail();
+        $this->authorize('delete', $personnel);
+        $personnel->delete();
 
     return redirect()->back()->with('success', 'Un personnel supprimé avec succès');; 
     }

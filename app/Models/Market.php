@@ -26,8 +26,8 @@ class Market extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'market_user')
-                    ->withPivot('role')
-                    ->withTimestamps();
+            ->withPivot('market_role')
+            ->withTimestamps();
     }
 
     // Relation avec les secteurs

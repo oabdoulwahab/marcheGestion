@@ -28,4 +28,9 @@ class Finance extends Model
     {
         return $query->where('type', $type);
     }
+
+    public function market()
+    {
+        return $this->belongsTo(Market::class);
+    }
 }

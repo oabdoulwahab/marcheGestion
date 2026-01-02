@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('secteurs', function (Blueprint $table) {
-            $table->foreignId('market_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('market_id')->constrained()->cascadeOnDelete();
         });
     }
 

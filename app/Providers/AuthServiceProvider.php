@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        '*' => MarketPolicy::class,
     ];
 
     /**
@@ -23,6 +24,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        \Illuminate\Support\Facades\Gate::before(
+            app(MarketPolicy::class)->before(...)
+        );
         //
     }
 }

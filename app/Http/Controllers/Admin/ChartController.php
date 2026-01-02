@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Finance;
 use App\Models\Secteur;
-use App\Models\Personnel;
 use Illuminate\Http\Request;
 
 class ChartController extends Controller
 {
-    //
-    public function index(){
-        // $personne = Personnel::all();
-        // $finances = Finance::select('type', 'amount')->get();
-
-        // $data = [['types', 'montant']];
-        // foreach ($finances as $finances) {
-        //     $data[] = [$finances->type, $finances->amount];
-        // }
-    
-        // return view('test', compact('data'));
+    public function index()
+    {
+        //
     }
+
     public function show(string $id)
-{
-    // Récupérer un secteur spécifique avec ses commerçants et leurs espaces
-    $secteur = Secteur::with(['marchants.espace'])
-        ->findOrFail($id);
+    {
+        $marketId = session('current_market_id');
+        // Récupérer un secteur spécifique avec ses commerçants et leurs espaces
+        $secteur = Secteur::with(['marchants.espace'])
+            ->where('id', $id)
+            ->where('market_id', $marketId)
+            ->firstOrFail();
 
-    // Retourner la vue avec les données du secteur
-    return view('test', compact('secteur'));
-}
-
+        // Retourner la vue avec les données du secteur
+        return view('test', compact('secteur'));
+    }
 }

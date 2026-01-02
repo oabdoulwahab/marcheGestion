@@ -2,46 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Contrat;
-use App\Models\Secteur;
-use App\Models\Marchant;
-use Illuminate\Http\Request;
-use App\Exports\ContratExport;
-use App\Models\Acheteur;
-use App\Models\Vendeur;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
-
 class ContratController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        $marchants = Marchant::all();
-        $secteurs = Secteur::all();
-        $contrats = Contrat::all();
-        return View('pages.admin.market.contrat.index', compact('marchants', 'secteurs', 'contrats'));
+        $marketId = session('current_market_id');
+        return view('pages.admin.market.contrat.index', [
+            'marchants' => Marchant::where('market_id', $marketId)->get(),
+            'secteurs' => Secteur::where('market_id', $marketId)->get(),
+            'contrats' => Contrat::where('market_id', $marketId)->latest()->get(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validation des données
-        $validatedData = $request->validate([
+        $this->authorize('create', Contrat::class);
+        $validated = $request->validate([
             'contrat_name' => 'required|string|max:255',
             'vendeur_name' => 'string|max:255|nullable',
             'vendeur_address' => 'string|max:255|nullable',
@@ -57,121 +33,72 @@ class ContratController extends Controller
             'montant' => 'required|numeric',
         ]);
 
-        // Génération du numéro de contrat
-        $currentDate = now()->format('Ymd');
-        $timeStamp = now()->format('His');
-        $numeroContrat = 'CONTRAT N°' . $currentDate . '-' . $timeStamp;
+        $numeroContrat = 'CONTRAT N°'.now()->format('Ymd-His');
 
-        // Gestion du vendeur
-        $vendeur = null;
-        if (!empty($validatedData['vendeur_name'])) {
-            $vendeur = Vendeur::firstOrCreate(
-                ['name' => $validatedData['vendeur_name']],
-                [
-                    'addresse' => $validatedData['vendeur_address'] ?? null,
-                    'phone' => $validatedData['vendeur_phone'] ?? null,
-                    'email' => $validatedData['vendeur_email'] ?? null,
-                ]
-            );
-        }
+        Contrat::create([
+            'numero_contrat' => $numeroContrat,
+            'contrat_name' => $validated['contrat_name'],
+            'vendeur_id' => $this->getOrCreateVendeur($validated)->id ?? null,
+            'acheteur_id' => $this->getOrCreateAcheteur($validated)->id ?? null,
+            'date_debut' => $validated['date_debut'],
+            'date_fin' => $validated['date_fin'],
+            'montant' => $validated['montant'],
+            'market_id' => session('current_market_id'),
+        ]);
 
-        // Gestion de l'acheteur
-        $acheteur = null;
-        if (!empty($validatedData['acheteur_name'])) {
-            $acheteur = Acheteur::firstOrCreate(
-                ['name' => $validatedData['acheteur_name']],
-                [
-                    'addresse' => $validatedData['acheteur_address'] ?? null,
-                    'phone' => $validatedData['acheteur_phone'] ?? null,
-                    'email' => $validatedData['acheteur_email'] ?? null,
-                    'activite' => $validatedData['acheteur_activite'] ?? null,
-                ]
-            );
-        }
-
-        // Création du contrat
-        $contrat = new Contrat();
-        $contrat->numero_contrat = $numeroContrat;
-        $contrat->contrat_name = $validatedData['contrat_name'];
-        $contrat->vendeur_id = $vendeur ? $vendeur->id : null;
-        $contrat->acheteur_id = $acheteur ? $acheteur->id : null;
-        $contrat->date_debut = $validatedData['date_debut'];
-        $contrat->date_fin = $validatedData['date_fin'];
-        $contrat->montant = $validatedData['montant'];
-
-        // Mise à jour automatique du statut
-        // $contrat->updateStatus();
-
-        $contrat->save();
-
-        // Redirection avec un message de succès
-        return back()->with('success', 'Contrat ajouté avec succès avec le numéro : ' . $numeroContrat);
+        return back()->with('success', "Contrat ajouté avec succès : $numeroContrat");
     }
 
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    private function getOrCreateVendeur($data)
     {
-        //
-        $contrat = Contrat::with('vendeur')->findOrFail($id);
-        return view('pages.admin.market.contrat.show', compact('contrat'));
+        return $data['vendeur_name'] ? Vendeur::firstOrCreate(
+            ['name' => $data['vendeur_name']],
+            ['addresse' => $data['vendeur_address'] ?? null, 'phone' => $data['vendeur_phone'] ?? null, 'email' => $data['vendeur_email'] ?? null]
+        ) : null;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    private function getOrCreateAcheteur($data)
     {
-        //
+        return $data['acheteur_name'] ? Acheteur::firstOrCreate(
+            ['name' => $data['acheteur_name']],
+            ['addresse' => $data['acheteur_address'] ?? null, 'phone' => $data['acheteur_phone'] ?? null, 'email' => $data['acheteur_email'] ?? null, 'activite' => $data['acheteur_activite'] ?? null]
+        ) : null;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function show($id)
     {
-        //
+        $marketId = session('current_market_id');
+        return view('pages.admin.market.contrat.show', ['contrat' => Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id)]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
-        $contrat = Contrat::findOrFail($id);
+        $contrat = Contrat::where('id', $id)->firstOrFail();
+
+        $this->authorize('delete', $contrat);
+
         $contrat->delete();
     }
 
     public function exportPDF($id)
     {
-        $contrat = Contrat::with('vendeur', 'acheteur')->findOrFail($id);
+        $marketId = session('current_market_id');
+        $contrat = Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id);
 
-        // Génération du PDF
-        $pdf = Pdf::loadView('exports.contrat', compact('contrat'));
-
-        // Téléchargement du fichier PDF
-        return $pdf->download('contrat_' . $contrat->numero_contrat . '.pdf');
+        return Pdf::loadView('exports.contrat', compact('contrat'))->download("contrat_$contrat->numero_contrat.pdf");
     }
-
 
     public function exportExcel($id)
     {
-        $contrat = Contrat::findOrFail($id);
+        $marketId = session('current_market_id');
+        $contrat = Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id);
 
-        return Excel::download(new ContratExport($contrat), 'contrat_' . $contrat->numero_contrat . '.xlsx');
+        return Excel::download(new ContratExport($contrat), "contrat_$contrat->numero_contrat.xlsx");
     }
 
     public function details($id)
     {
-        // Récupérez les détails du contrat par ID
-        $contrat = Contrat::findOrFail($id);
-
-        // Retournez une vue avec les données du contrat
-        return view('pages.admin.market.contrat.details', compact('contrat'));
+        $marketId = session('current_market_id');
+        return view('pages.admin.market.contrat.details', ['contrat' => Contrat::with('vendeur', 'acheteur')->where('market_id', $marketId)->findOrFail($id)]);
     }
 }

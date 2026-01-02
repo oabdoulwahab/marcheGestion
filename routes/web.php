@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\Admin\{
-    MarketController,
+    MarketController, 
     ContratController,
     SecteurController,
     FinancesController,
@@ -22,22 +22,22 @@ use Illuminate\Support\Facades\Artisan;
 
 Auth::routes();
 
-Route::get('/setup', function () {
-    // Exécute les migrations
-    Artisan::call('migrate', ['--force' => true]);
+// Route::get('/setup', function () {
+//     // Exécute les migrations
+//     Artisan::call('migrate', ['--force' => true]);
 
-    // Exécute les seeders
-    Artisan::call('db:seed', ['--force' => true]);
+//     // Exécute les seeders
+//     Artisan::call('db:seed', ['--force' => true]);
 
-    return 'Migrations et seeders exécutés avec succès !';
-});
+//     return 'Migrations et seeders exécutés avec succès !';
+// });
 
 // Public routes
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 
 // Routes protégées par authentication
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','setCurrentMarket'])->group(function () {
     
     // Routes communes aux agents et admins
     Route::middleware(['role:agent,admin'])->group(function () {

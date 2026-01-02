@@ -24,8 +24,8 @@ trait BelongsToMarket
     }
 
     // Relation avec Market (optionnelle, utile si pas déjà définie)
-    public function market()
-    {
-        return $this->belongsTo(\App\Models\Market::class);
-    }
+    // public function market()
+    // {
+    //     return $this->belongsTo(\App\Models\Market::class);
+    // }
 }

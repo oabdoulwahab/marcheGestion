@@ -35,7 +35,10 @@ class PaiementController extends Controller
             });
         });
 
-        $paiements = Paiement::with(['marchant', 'cotisation'])->get();
+        $paiements = Paiement::with(['marchant', 'cotisation'])
+            ->where('market_id', $marketId)
+            ->orderBy('date_paiement', 'desc')
+            ->get();
 
         return view('pages.admin.cotisation.paiment.show', compact('paiements', 'marchants'));
     }
@@ -45,7 +48,6 @@ class PaiementController extends Controller
      */
     public function create()
     {
-        //
         $marketId = session('current_market_id');
         $marchants = Marchant::where('market_id', $marketId)->get();
         $cotisations = Cotisation::where('market_id', $marketId)->get();

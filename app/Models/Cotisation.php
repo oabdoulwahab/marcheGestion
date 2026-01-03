@@ -9,7 +9,7 @@ use App\Traits\BelongsToMarket;
 class Cotisation extends Model
 {
     use HasFactory , BelongsToMarket;
-    protected $fillable = ['name', 'montant_total', 'date_debut', 'date_fin','market_id'];
+    protected $fillable = ['name', 'montant_total', 'date_debut', 'date_fin'];
 
     // Relation many-to-many avec marchant
     public function marchants()

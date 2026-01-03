@@ -16,7 +16,6 @@ class Acheteur extends Model
         'email',
         'activite',
         'addresse',
-        'market_id',
     ];
 
     

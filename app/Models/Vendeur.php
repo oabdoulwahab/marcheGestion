@@ -15,7 +15,6 @@ class Vendeur extends Model
         'phone',
         'email',
         'addresse',
-        'market_id',
     ];
 
     public function contrats()

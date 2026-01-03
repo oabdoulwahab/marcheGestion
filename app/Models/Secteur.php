@@ -17,7 +17,6 @@ use App\Traits\BelongsToMarket;
             'name',
             'description',
             'user_id',
-            'market_id',
         ];
     
         // Relation avec Merchant

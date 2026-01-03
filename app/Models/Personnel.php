@@ -17,7 +17,6 @@ class Personnel extends Model
         'poste',
         'ventes',
         'chiffre_affaire',
-        'market_id',
     ];
 
     /**

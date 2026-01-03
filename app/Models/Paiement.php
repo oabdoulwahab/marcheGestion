@@ -9,7 +9,7 @@ use App\Traits\BelongsToMarket;
 class Paiement extends Model
 {
     use HasFactory, BelongsToMarket;
-    protected $fillable = ['marchant_id', 'cotisation_id', 'montant', 'date_paiement','market_id'];
+    protected $fillable = ['marchant_id', 'cotisation_id', 'montant', 'date_paiement'];
 
    // Relation many-to-one avec Marchant
    public function marchant()

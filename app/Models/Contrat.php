@@ -19,7 +19,6 @@ class Contrat extends Model
         'status',
         'vendeur_id',
         'acheteur_id',
-        'market_id',
     ];
 
     // Relation avec Market

@@ -15,7 +15,6 @@ class Market extends Model
         'city',
         'country',
         'status',
-        'settings',
     ];
 
     protected $casts = [

@@ -33,7 +33,6 @@ class SecteurController extends Controller
             'name' => $validated['name'],
             'description' => $validated['description'],
             'user_id' => Auth::id(),
-            'market_id' => session('current_market_id'),
         ]);
 
         return redirect()->route('secteur.index')->with('success', 'Secteur créé avec succès.');

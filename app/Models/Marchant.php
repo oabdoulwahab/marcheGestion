@@ -16,7 +16,6 @@ class Marchant extends Model
         'secteur_id',
         'espace_id',
         'date_inscription',
-        'market_id',
     ];
 
     // Relation avec Market

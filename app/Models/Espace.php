@@ -13,7 +13,6 @@ class Espace extends Model
         'numero_space',
         'secteur_id',
         'status',
-        'market_id', 
     ];
 
    

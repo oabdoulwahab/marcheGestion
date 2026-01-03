@@ -15,7 +15,6 @@ class Finance extends Model
         'type',
         'amount',
         'status',
-        'market_id',
     ];
 
     protected $attributes = [

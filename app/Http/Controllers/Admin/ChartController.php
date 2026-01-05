@@ -14,7 +14,7 @@ class ChartController extends Controller
 
     public function show(string $id)
     {
-        $marketId = session('current_market_id');
+        $marketId = auth()->user()->market_id;
         // Récupérer un secteur spécifique avec ses commerçants et leurs espaces
         $secteur = Secteur::with(['marchants.espace'])
             ->where('id', $id)

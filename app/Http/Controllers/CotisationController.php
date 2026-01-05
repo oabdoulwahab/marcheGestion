@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Finance;
 use App\Models\Marchant;
 use App\Models\Cotisation;
 use Illuminate\Http\Request;
@@ -11,87 +10,130 @@ class CotisationController extends Controller
 {
     public function index()
     {
-        $marketId = session('current_market_id');
-        $cotisations = Cotisation::where('market_id', $marketId)->withCount('marchants')->get();
-        $marchands = Marchant::where('market_id', $marketId)->get();
-        
-        return view('pages.admin.cotisation.cotisation.index', compact('marchands', 'cotisations'));
+        $cotisations = Cotisation::withCount('marchants')->get();
+        $marchands  = Marchant::all();
+
+        return view(
+            'pages.admin.cotisation.cotisation.index',
+            compact('marchands', 'cotisations')
+        );
     }
 
     public function store(Request $request)
     {
         $this->authorize('create', Cotisation::class);
-        $request->validate([
-            'name' => 'nullable|string|max:255',
+
+        $validated = $request->validate([
+            'name'          => 'nullable|string|max:255',
             'montant_total' => 'required|numeric|min:0',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after:date_debut',
+            'date_debut'    => 'required|date',
+            'date_fin'      => 'required|date|after:date_debut',
         ]);
 
-        Cotisation::create($request->all());
+        Cotisation::create($validated);
 
-        return redirect()->back()->with('success', 'Cotisation créée avec succès.');
+        return redirect()
+            ->back()
+            ->with('success', 'Cotisation créée avec succès.');
     }
 
-    public function show($id)
+    public function show(Cotisation $cotisation)
     {
-        $marketId = session('current_market_id');
-        $cotisation = Cotisation::where('market_id', $marketId)->with(['marchants' => fn($q) => $q->orderBy('name')])->findOrFail($id);
-        $marchants = $cotisation->marchants()->paginate(10);
-        $marchands = Marchant::whereDoesntHave('cotisations', fn($q) => $q->where('cotisation_id', $id))->where('market_id', $marketId)->get();
+        $marchants = $cotisation->marchants()->orderBy('name')->paginate(10);
 
-        return view('pages.admin.cotisation.cotisation.show', compact('cotisation', 'marchands'));
+        $marchandsDisponibles = Marchant::whereDoesntHave(
+            'cotisations',
+            fn ($q) => $q->where('cotisation_id', $cotisation->id)
+        )->get();
+
+        return view(
+            'pages.admin.cotisation.cotisation.show',
+            compact('cotisation', 'marchants', 'marchandsDisponibles')
+        );
     }
 
     public function update(Request $request, Cotisation $cotisation)
     {
-        $request->validate([
-            'name' => 'nullable|string|max:255',
+        $this->authorize('update', $cotisation);
+
+        $validated = $request->validate([
+            'name'          => 'nullable|string|max:255',
             'montant_total' => 'required|numeric|min:0',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after:date_debut',
+            'date_debut'    => 'required|date',
+            'date_fin'      => 'required|date|after:date_debut',
         ]);
 
-        $cotisation->update($request->all());
+        $cotisation->update($validated);
 
-        return redirect()->back()->with('success', 'Cotisation mise à jour avec succès.');
+        return redirect()
+            ->back()
+            ->with('success', 'Cotisation mise à jour avec succès.');
     }
 
     public function destroy(Cotisation $cotisation)
     {
         $this->authorize('delete', $cotisation);
+
         $cotisation->delete();
-        return redirect()->route('cotisations.index')->with('success', 'Cotisation supprimée avec succès.');
+
+        return redirect()
+            ->route('cotisations.index')
+            ->with('success', 'Cotisation supprimée avec succès.');
     }
 
-    public function addAdherents(Request $request, $id)
+    public function addAdherents(Request $request, Cotisation $cotisation)
     {
-        $request->validate(['adherents' => 'required|exists:marchants,id']);
-        $marketId = session('current_market_id');
-        Cotisation::where('market_id', $marketId)->findOrFail($id)->marchants()->syncWithoutDetaching($request->adherents);
+        $validated = $request->validate([
+            'adherents' => 'required|array',
+            'adherents.*' => 'exists:marchants,id',
+        ]);
 
-        return redirect()->back()->with('success', 'Adhérents ajoutés avec succès.');
+        $cotisation->marchants()->syncWithoutDetaching($validated['adherents']);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Adhérents ajoutés avec succès.');
     }
 
-    public function removeAdherent($cotisationId, $marchantId)
+    public function removeAdherent(Cotisation $cotisation, Marchant $marchant)
     {
-        $marketId = session('current_market_id');
-        Cotisation::where('market_id', $marketId)->findOrFail($cotisationId)->marchants()->detach($marchantId);
-        return redirect()->back()->with('success', 'Adhérent retiré avec succès.');
+        $cotisation->marchants()->detach($marchant->id);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Adhérent retiré avec succès.');
     }
 
-    public function filterAdherentsByDate(Request $request, $cotisationId)
+    public function filterAdherentsByDate(Request $request, Cotisation $cotisation)
     {
-        $marketId = session('current_market_id');
         $filter = $request->input('filter', 'all');
-        $query = Cotisation::where('market_id', $marketId)->findOrFail($cotisationId)->marchants()->with('paiements');
 
-        match($filter) {
-            'year' => $query->whereHas('paiements', fn($q) => $q->whereYear('date_payment', now()->year)),
-            'month' => $query->whereHas('paiements', fn($q) => $q->whereYear('date_payment', now()->year)->whereMonth('date_payment', now()->month)),
-            'week' => $query->whereHas('paiements', fn($q) => $q->whereBetween('date_payment', [now()->startOfWeek(), now()->endOfWeek()])),
-            'day' => $query->whereHas('paiements', fn($q) => $q->whereDate('date_payment', now())),
-            default => $query
+        $query = $cotisation->marchants()->with('paiements');
+
+        match ($filter) {
+            'year'  => $query->whereHas(
+                'paiements',
+                fn ($q) => $q->whereYear('date_payment', now()->year)
+            ),
+            'month' => $query->whereHas(
+                'paiements',
+                fn ($q) =>
+                    $q->whereYear('date_payment', now()->year)
+                      ->whereMonth('date_payment', now()->month)
+            ),
+            'week'  => $query->whereHas(
+                'paiements',
+                fn ($q) =>
+                    $q->whereBetween(
+                        'date_payment',
+                        [now()->startOfWeek(), now()->endOfWeek()]
+                    )
+            ),
+            'day'   => $query->whereHas(
+                'paiements',
+                fn ($q) => $q->whereDate('date_payment', now())
+            ),
+            default => null,
         };
 
         return response()->json($query->get());

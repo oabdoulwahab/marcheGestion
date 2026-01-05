@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Http\Controllers\Controller;
 use App\Models\Finance;
 use Illuminate\Http\Request;
 
@@ -9,81 +10,80 @@ class FinancesController extends Controller
 {
     public function index()
     {
-        $marketId = session('current_market_id');
-        return view('pages.admin.gesfin.index', [
-            'finances' => Finance::where('market_id', $marketId)->get()
-        ]);
-    }
+        // Déjà filtré par le marché courant (Global Scope)
+        $finances = Finance::latest()->get();
 
-    public function create()
-    {
-        // Retourner la vue de création si nécessaire
+        return view('pages.admin.gesfin.index', compact('finances'));
     }
 
     public function store(Request $request)
     {
         $this->authorize('create', Finance::class);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'type' => 'nullable|in:revenu,dépense',
-            'amount' => 'required|numeric|min:0',
-            'status' => 'nullable|in:En attente,Complété,Annulé',
+            'type'        => 'nullable|in:revenu,dépense',
+            'amount'      => 'required|numeric|min:0',
+            'status'      => 'nullable|in:En attente,Complété,Annulé',
         ]);
 
         Finance::create([
             ...$validated,
-            'type' => $validated['type'] ?? 'dépense',
+            'type'   => $validated['type'] ?? 'dépense',
             'status' => $validated['status'] ?? 'En attente',
-            'market_id' => session('current_market_id'),
+            // market_id AUTOMATIQUE
         ]);
 
-        return redirect()->route('finance.index')
+        return redirect()
+            ->route('finance.index')
             ->with('success', 'Transaction créée avec succès.');
     }
 
-    public function show($id)
+    public function show(Finance $finance)
     {
-        $marketId = session('current_market_id');
-        return view('pages.admin.gesfin.show', [
-            'finance' => Finance::where('market_id', $marketId)->findOrFail($id)
-        ]);
+        $this->authorize('view', $finance);
+
+        return view('pages.admin.gesfin.show', compact('finance'));
     }
 
-    public function edit($id)
+    public function edit(Finance $finance)
     {
-        $marketId = session('current_market_id');
-        return view('pages.admin.gesfin.edit', [
-            'finance' => Finance::where('market_id', $marketId)->findOrFail($id)
-        ]);
+        $this->authorize('update', $finance);
+
+        return view('pages.admin.gesfin.edit', compact('finance'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Finance $finance)
     {
-        $this->authorize('update', Finance::class);
+        $this->authorize('update', $finance);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:dépense,revenu',
-            'amount' => 'required|numeric',
+            'type'        => 'required|in:revenu,dépense',
+            'amount'      => 'required|numeric',
         ]);
 
-        Finance::where('market_id', $marketId)->findOrFail($id)->update($validated);
+        $finance->update($validated);
 
-        return redirect()->route('finance.index')
+        return redirect()
+            ->route('finance.index')
             ->with('success', 'Transaction mise à jour avec succès.');
     }
 
-    public function destroy($id)
+    public function destroy(Finance $finance)
     {
-        $finance = Finance::where('market_id', $marketId)->where('id', $id)->firstOrFail();
         $this->authorize('delete', $finance);
+
         $finance->delete();
 
-        return redirect()->back()->with('success', 'Supprimé avec succès');
+        return redirect()
+            ->back()
+            ->with('success', 'Supprimé avec succès.');
     }
 
-    public function updateStatus($id, $status)
+    public function updateStatus(Finance $finance, string $status)
     {
         $validStatuses = ['En attente', 'Complété', 'Annulé'];
 
@@ -91,8 +91,10 @@ class FinancesController extends Controller
             return back()->with('error', 'Statut non valide.');
         }
 
-        Finance::where('market_id', $marketId)->findOrFail($id)->update(['status' => $status]);
+        $this->authorize('update', $finance);
 
-        return back()->with('success', "Le statut a été mis à jour à \"$status\".");
+        $finance->update(['status' => $status]);
+
+        return back()->with('success', "Statut mis à jour à \"$status\".");
     }
 }

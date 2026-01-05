@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Espace;
 use App\Models\Marchant;
 use App\Models\Secteur;
@@ -15,55 +16,69 @@ class MerchantController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Marchant::class);
-        $request->validate([
-            'name' => 'required|max:255',
-            'address' => 'nullable|max:255',
-            'phone' => 'nullable|max:15',
+
+        $validated = $request->validate([
+            'name'       => 'required|string|max:255',
+            'address'    => 'nullable|string|max:255',
+            'phone'      => 'nullable|string|max:15',
             'secteur_id' => 'required|exists:secteurs,id',
-            'espace_id' => 'nullable|exists:espaces,id',
+            'espace_id'  => 'nullable|exists:espaces,id',
         ]);
 
-        $marchant = Marchant::create($request->all());
+        $marchant = Marchant::create([
+            'name'       => $validated['name'],
+            'address'    => $validated['address'] ?? null,
+            'phone'      => $validated['phone'] ?? null,
+            'secteur_id' => $validated['secteur_id'],
+            'espace_id'  => $validated['espace_id'] ?? null,
+        ]);
 
-        if ($request->filled('espace_id')) {
-            Espace::where('id', $request->espace_id)->update(['status' => 'Occupé']);
+        // Marquer l’espace comme occupé si attribué
+        if ($marchant->espace_id) {
+            $marchant->espace->update(['status' => 'Occupé']);
         }
 
-        return redirect()->back()->with('success', 'Commerçant ajouté avec succès');
+        return redirect()->back()
+            ->with('success', 'Commerçant ajouté avec succès.');
     }
 
     /**
-     * Show the specified resource.
+     * Show merchants by secteur
      */
-    public function show(string $id)
+    public function show($id)
     {
-        $marketId = session('current_market_id');
-        $secteurs = Secteur::with('marchants')->where('market_id', $marketId)->findOrFail($id);
+        $secteur = Secteur::with('marchants')->findOrFail($id);
 
-        return view('pages.admin.market.marchant.index', compact('secteurs'));
+        return view('pages.admin.market.marchant.index', compact('secteur'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Marchant $marchant)
     {
-        $marketId = session('current_market_id');
-        $this->authorize('update', Marchant::class);
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:15',
+        $this->authorize('update', $marchant);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255',
+            'address'   => 'nullable|string|max:255',
+            'phone'     => 'nullable|string|max:15',
             'espace_id' => 'required|exists:espaces,id',
         ]);
 
-        $marchant = Marchant::where('id', $id)->where('market_id', $marketId)->firstOrFail();
-        $this->authorize('update', $marchant);
+        // Libérer l’ancien espace si changé
+        if ($marchant->espace_id && $marchant->espace_id !== $validated['espace_id']) {
+            $marchant->espace->update(['status' => 'Disponible']);
+        }
 
-        $marchant->update($request->only(['name', 'address', 'phone', 'espace_id']));
+        $marchant->update($validated);
 
-        return redirect()->route('secteur.show', $marchant->secteur->id)
-            ->with('success', 'Marchand mis à jour avec succès.');
+        // Marquer le nouvel espace comme occupé
+        $marchant->espace->update(['status' => 'Occupé']);
+
+        return redirect()
+            ->route('secteur.show', $marchant->secteur_id)
+            ->with('success', 'Commerçant mis à jour avec succès.');
     }
 
     /**
@@ -71,13 +86,16 @@ class MerchantController extends Controller
      */
     public function destroy(Marchant $marchant)
     {
-        if ($marchant->espace_id) {
-            Espace::where('id', $marchant->espace_id)->update(['status' => 'Disponible']);
+        $this->authorize('delete', $marchant);
+
+        // Libérer l’espace si existant
+        if ($marchant->espace) {
+            $marchant->espace->update(['status' => 'Disponible']);
         }
 
-        $this->authorize('delete', $marchant);
         $marchant->delete();
 
-        return redirect()->back()->with('success', 'Commerçant supprimé avec succès');
+        return redirect()->back()
+            ->with('success', 'Commerçant supprimé avec succès.');
     }
 }

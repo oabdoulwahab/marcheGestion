@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Secteur;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,8 +11,9 @@ class SecteurController extends Controller
 {
     public function index()
     {
-        $marketId = session('current_market_id');
-        $secteurs = Secteur::with('user')->where('market_id', $marketId)->paginate(20);
+        // Filtré automatiquement par le marché courant
+        $secteurs = Secteur::with('user')->paginate(20);
+
         return view('pages.admin.secteur.index', compact('secteurs'));
     }
 
@@ -24,45 +25,54 @@ class SecteurController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Secteur::class);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
         ]);
 
         Secteur::create([
             ...$validated,
             'user_id' => Auth::id(),
-            'market_id' => session('current_market_id'),
+            // market_id AUTOMATIQUE via BelongsToMarket
         ]);
 
-        return redirect()->route('secteur.index')->with('success', 'Secteur créé avec succès.');
+        return redirect()
+            ->route('secteur.index')
+            ->with('success', 'Secteur créé avec succès.');
     }
 
-    public function edit($id)
+    public function edit(Secteur $secteur)
     {
-        $marketId = session('current_market_id');
-        $secteur = Secteur::where('market_id', $marketId)->findOrFail($id);
+        $this->authorize('update', $secteur);
+
         return view('pages.admin.secteur.edit', compact('secteur'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Secteur $secteur)
     {
-        $this->authorize('update', Secteur::class);
+        $this->authorize('update', $secteur);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
-        Secteur::where('market_id', $marketId)->findOrFail($id)->update($validated);
-        return redirect()->route('secteur.index')->with('success', 'Secteur mis à jour.');
+        $secteur->update($validated);
+
+        return redirect()
+            ->route('secteur.index')
+            ->with('success', 'Secteur mis à jour.');
     }
 
-    public function destroy($id)
+    public function destroy(Secteur $secteur)
     {
-        $marketId = session('current_market_id');
-        $secteur = Secteur::where('market_id', $marketId)->where('id', $id)->firstOrFail();
         $this->authorize('delete', $secteur);
+
         $secteur->delete();
-        return redirect()->back()->with('success', 'Supprimé avec succès.');
+
+        return redirect()
+            ->back()
+            ->with('success', 'Secteur supprimé avec succès.');
     }
 }

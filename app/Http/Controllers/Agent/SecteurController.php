@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Agent;
 
+use App\Http\Controllers\Controller;
 use App\Models\Secteur;
 use App\Models\Marchant;
 use Illuminate\Http\Request;
@@ -11,8 +12,8 @@ class SecteurController extends Controller
 {
     public function index()
     {
-        $marketId = session('current_market_id');
-        $secteurs = Secteur::with('user')->where('market_id', $marketId)->get();
+        $secteurs = Secteur::with('user')->get();
+
         return view('pages.agent.secteur.index', compact('secteurs'));
     }
 
@@ -24,54 +25,59 @@ class SecteurController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Secteur::class);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'string|max:255|nullable',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
         ]);
 
         Secteur::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'user_id' => Auth::id(),
+            'name'        => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'user_id'     => Auth::id(),
         ]);
 
-        return redirect()->route('secteur.index')->with('success', 'Secteur créé avec succès.');
+        return redirect()
+            ->route('secteur.index')
+            ->with('success', 'Secteur créé avec succès.');
     }
 
-    public function show(string $id)
+    public function show(Marchant $marchand)
     {
-        $marketId = session('current_market_id');
-        $marchand = Marchant::where('market_id', $marketId)->findOrFail($id);
         return view('pages.agent.market.marchant.show', compact('marchand'));
     }
 
-    public function edit(string $id)
+    public function edit(Secteur $secteur)
     {
-        $marketId = session('current_market_id');
-        $secteur = Secteur::where('market_id', $marketId)->findOrFail($id);
-        return view('pages.admin.secteur.edit', compact('secteur'));
+        $this->authorize('update', $secteur);
+
+        return view('pages.agent.secteur.edit', compact('secteur'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Secteur $secteur)
     {
-        $marketId = session('current_market_id');
-        $this->authorize('update', Secteur::where('market_id', $marketId)->findOrFail($id));
+        $this->authorize('update', $secteur);
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
-        Secteur::where('market_id', $marketId)->findOrFail($id)->update($validated);
+        $secteur->update($validated);
 
-        return redirect()->route('secteur.index')->with('success', 'Le secteur a été mis à jour avec succès.');
+        return redirect()
+            ->route('secteur.index')
+            ->with('success', 'Le secteur a été mis à jour avec succès.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Secteur $secteur)
     {
-        $marketId = session('current_market_id');
-        $secteur = Secteur::where('market_id', $marketId)->where('id', $id)->firstOrFail();
         $this->authorize('delete', $secteur);
+
         $secteur->delete();
-        return redirect()->back()->with('success', 'Supprimé avec succès');
+
+        return redirect()
+            ->back()
+            ->with('success', 'Secteur supprimé avec succès.');
     }
 }
